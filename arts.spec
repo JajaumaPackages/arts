@@ -94,9 +94,7 @@ KDE applications using sound).
 %patch3 -p1 -b .pie
 %patch4 -p1 -b .multilib
 %patch5 -p1 -b .alsa
-%ifarch x86_64
-%patch6 -p1 -b .amd64
-%endif
+%patch6 -p1 -b .gcc
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
