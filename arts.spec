@@ -8,7 +8,7 @@
 
 %define debug 0
 
-%define release_number 1
+%define release_number 2
 
 %define build_for_ftp 0
 
@@ -152,6 +152,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/Arts/*
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
+%{_libdir}/*.la
 %{_bindir}/artscat
 %{_bindir}/artsd*
 %{_bindir}/artsp*
@@ -163,13 +164,15 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{_bindir}/mcopidl
-%{_libdir}/lib*.la
 %{_libdir}/lib*.so
 %{_includedir}/kde/arts
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
 
 %changelog
+* Wed Mar  5 2003 Than Ngo <than@redhat.com> 1.0.5a-2
+- la files in arts package (bug #83607)
+
 * Sat Dec 21 2002 Than Ngo <than@redhat.com> 1.0.5a-1
 - update 1.0.5a
 
