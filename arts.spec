@@ -8,8 +8,8 @@
 
 %define libtool 1
 
-Version: 1.3.0
-Release: 4
+Version: 1.3.1
+Release: 1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -156,6 +156,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Wed Oct 06 2004 Than Ngo <than@redhat.com> 1.3.1-1
+- update to KDE 3.3.1
+
 * Wed Sep 15 2004 Than Ngo <than@redhat.com> 1.3.0-4 
 - fix multilib problem #132576
 
