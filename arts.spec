@@ -1,13 +1,11 @@
 %define debug 0
 
-%define build_for_ftp 0
-
-%define qt_version 3.1.1
+%define qt_version 3.1.2
 
 %define libtool 0
 
-Version: 1.1
-Release: 7
+Version: 1.1.3
+Release: 0.9x.1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -19,10 +17,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Patch: arts-1.1.0-vacopy.patch
 Patch1: arts-1.1-gcc3.patch
-
-%if %{build_for_ftp}
-ExclusiveArch: %{ix86}
-%endif
+Patch2: kde-libtool.patch
 
 Requires: audiofile
 
@@ -51,7 +46,7 @@ playing a wave file with some effects.
 %package devel
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
-requires: %{name} = %{version}-%{release}
+requires: %{name} = %{epoch}:%{version}-%{release}
 Obsoletes: kdelibs-sound-devel
 Provides: kdelibs-sound-devel
 
@@ -74,16 +69,7 @@ KDE applications using sound).
 %setup -q
 %patch -p1 -b .x86_64
 %patch1 -p1 -b .gcc3
-
-# Workaround for legacy auto* tools
-%if %{libtool}
-[ -x /usr/bin/autoconf-2.5? ] && ln -s /usr/bin/autoconf-2.5? autoconf
-[ -x /usr/bin/autoheader-2.5? ] && ln -s /usr/bin/autoheader-2.5? autoheader
-[ -x /usr/bin/aclocal-1.5 ] && ln -s /usr/bin/aclocal-1.5 aclocal
-[ -x /usr/bin/automake-1.5 ] && ln -s /usr/bin/automake-1.5 automake
-export PATH=`pwd`:$PATH
-make -f Makefile.cvs
-%endif
+%patch2 -p1 -b .libtool
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -108,21 +94,6 @@ export DESTDIR=$RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
 
-# don't include gcc path in .la file
-for i in $RPM_BUILD_ROOT%{_libdir}/*.la ; do
-   newdeplib=""
-   source $i
-   if echo $dependency_libs | grep "gcc-lib" >& /dev/null ; then
-      for j in $dependency_libs ; do
-         if echo $j | grep "gcc-lib" >& /dev/null ; then
-            continue
-         fi
-         newdeplib="$newdeplib $j"
-      done
-      perl -pi -e "s|.*dependency_libs=.*|dependency_libs='$newdeplib'|g" $i
-   fi
-done
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -137,6 +108,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/Arts/*
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
+%{_libdir}/*.la
 %{_bindir}/artscat
 %{_bindir}/artsd*
 %{_bindir}/artsp*
@@ -149,13 +121,22 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{_bindir}/mcopidl
-%{_libdir}/lib*.la
 %{_libdir}/lib*.so
 %{_includedir}/kde/arts
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
 
 %changelog
+* Wed Jul 16 2003 Than Ngo <than@redhat.com> 8:1.1.3-0.9x.1
+- 3.1.3
+
+* Wed Apr  2 2003 Than Ngo <than@redhat.com> 1.1.1-0.9x.1
+- 3.1.1 for RHL 9
+
+* Wed Mar  5 2003 Than Ngo <than@redhat.com> 1.1-8
+- move la files in arts package (bug #83607)
+- add better patch to get rid of gcc path from la file
+
 * Mon Feb 24 2003 Elliot Lee <sopwith@redhat.com>
 - debuginfo rebuild
 
