@@ -4,12 +4,12 @@
 %define final 0
 
 %define alsa 1
-%define qt_version 3.3.2
+%define qt_version 3.3.3
 
 %define libtool 1
 
 Version: 1.3.0
-Release: 0.1.rc2
+Release: 1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -17,7 +17,7 @@ License: LGPL
 Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-buildroot
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}-rc2.tar.bz2
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
@@ -147,6 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Thu Aug 19 2004 Than Ngo <than@redhat.com> 1.3.0-1
+- update to 1.3.0 release
+
 * Tue Aug 10 2004 Than Ngo <than@redhat.com> 1.3.0-0.1.rc2
 - update 3.3 rc2
 
