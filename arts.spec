@@ -9,7 +9,7 @@
 %define make_cvs 1
 
 Version: 1.4.0
-Release: 0.rc1.4
+Release: 0.rc1.5
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -26,6 +26,7 @@ Patch3: arts-1.3.92-pie.patch
 Patch4: arts-1.3.0-multilib.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: admin-visibility.patch
+Patch7: arts-1.4.0-glibc.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -95,6 +96,7 @@ KDE applications using sound).
 %patch4 -p1 -b .multilib
 %patch5 -p1 -b .alsa
 %patch6 -p1 -b .gcc
+%patch7 -p1 -b .glibc
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -167,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Mon Mar 14 2005 Than Ngo <than@redhat.com> 8:1.4.0-0.rc1.5
+- fix build problem
+
 * Fri Mar 04 2005 Than Ngo <than@redhat.com> 8:1.4.0-0.rc1.4
 - rebuilt against gcc-4.0.0-0.31
 
