@@ -5,12 +5,12 @@
 %define final 0
 
 %define alsa 1
-%define qt_version 3.3.1
+%define qt_version 3.3.2
 
 %define libtool 1
 
-Version: 1.2.2
-Release: 4
+Version: 1.2.3
+Release: 2
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -40,6 +40,11 @@ BuildRequires: perl
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
 BuildRequires: audiofile-devel
+
+## workaround for gcc bug on ia64
+%ifarch ia64
+%define optflags -O0 -g
+%endif
 
 %description
 arts (analog real-time synthesizer) is the sound system of KDE 3.
@@ -148,8 +153,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
-* Tue Jun 01 2004 Karsten Hopp <karsten@redhat.de> 1.2.2-4 
-- remove -O0 on ia64 
+* Thu Jun 17 2004 Than Ngo <than@redhat.com> 1.2.3-2
+- rebuild
+
+* Mon May 31 2004 Than Ngo <than@redhat.com> 1.2.3-1
+- update to 1.2.3
 
 * Thu May 13 2004 Than Ngo <than@redhat.com> 1.2.2-3
 - add patch to enable PIE build of artsd
