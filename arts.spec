@@ -8,8 +8,8 @@
 
 %define libtool 1
 
-Version: 1.3.2
-Release: 0.1
+Version: 1.4.0
+Release: 0.rc1.1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -17,12 +17,12 @@ License: LGPL
 Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-buildroot
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}-rc1.tar.bz2
 
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
-Patch2: arts-1.2.0-glib2.patch
-Patch3: arts-1.2.2-pie.patch
+Patch2: arts-1.3.92-glib2.patch
+Patch3: arts-1.3.92-pie.patch
 Patch4: arts-1.3.0-multilib.patch
 Patch5: arts-1.3.1-alsa.patch
 
@@ -163,6 +163,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Fri Feb 25 2005 Than Ngo <than@redhat.com> 8:1.4.0-0.rc1.1
+- KDE 3.4.0 rc1
+
+* Mon Feb 14 2005 Than Ngo <than@redhat.com> 8:1.3.92-0.1
+- 3.4beta2
+
 * Fri Dec 03 2004 Than Ngo <than@redhat.com> 8:1.3.2-0.1
 - update to KDE 3.3.2
 
