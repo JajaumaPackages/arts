@@ -9,7 +9,7 @@
 %define libtool 1
 
 Version: 1.3.1
-Release: 3
+Release: 4
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -24,6 +24,7 @@ Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.2.0-glib2.patch
 Patch3: arts-1.2.2-pie.patch
 Patch4: arts-1.3.0-multilib.patch
+Patch5: arts-1.3.1-alsa.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -91,6 +92,7 @@ KDE applications using sound).
 %patch2 -p1 -b .glib
 %patch3 -p1 -b .pie
 %patch4 -p1 -b .multilib
+%patch5 -p1 -b .alsa
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -156,6 +158,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Fri Nov 19 2004 Than Ngo <than@redhat.com> 8:1.3.1-4
+- alsa as default
+
 * Fri Oct 29 2004 Than Ngo <than@redhat.com> 8:1.3.1-3
 - rebuilt in fc4 tree
 
