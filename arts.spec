@@ -1,11 +1,16 @@
+%define snapshot %{nil}
+%define _prefix /usr
+
 %define debug 0
+%define final 0
 
-%define qt_version 3.1.2
+%define alsa 1
+%define qt_version 3.2.2
 
-%define libtool 0
+%define libtool 1
 
-Version: 1.1.4
-Release: 3
+Version: 1.1.95
+Release: 0.1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -13,18 +18,18 @@ License: LGPL
 Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-buildroot
-
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
-Patch: arts-1.1.0-vacopy.patch
-Patch1: arts-1.1.4-flags.patch
-Patch2: kde-libtool.patch
-Patch3: arts-1.1.4-debug.patch
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}%{snapshot}.tar.bz2
+Patch0: kde-libtool.patch
+Patch1: arts-1.1.4-debug.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
 Obsoletes: kdelibs-sound
 Provides: kdelibs-sound
 
+%if %{alsa}
+BuildRequires: alsa-lib-devel >= 0.9.8
+%endif
 BuildRequires: autoconf >= 2.53
 BuildRequires: automake
 BuildRequires: qt-devel >= %{qt_version}
@@ -71,11 +76,9 @@ Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
 
 %prep
-%setup -q
-%patch -p1 -b .x86_64
-%patch1 -p1 -b .flags
-%patch2 -p1 -b .libtool
-%patch3 -p1 -b .debug
+%setup -q -n %{name}-%{version}%{snapshot}
+%patch0 -p1 -b .libtool
+%patch1 -p1 -b .debug
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -87,10 +90,16 @@ export PATH=`pwd`:$PATH
 make -f admin/Makefile.common cvs
 
 %configure \
+%if %{alsa}
+   --with-alsa \
+%endif
+%if %{final}
+   --enable-final \
+%endif
    --includedir=%{_includedir}/kde \
    --with-qt-libraries=$QTDIR/lib \
    --disable-debug \
-   --enable-final
+   --disable-rpath
 
 make %{?_smp_mflags}
 
@@ -117,13 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
 %{_libdir}/*.la
-%{_bindir}/artscat
-%{_bindir}/artsd*
-%{_bindir}/artsp*
-%{_bindir}/artss*
-%{_bindir}/artsw*
-%{_bindir}/artsr*
-%{_bindir}/testdhandle
+%{_bindir}/arts*
 %{_libdir}/lib*.so.*
 
 %files devel
@@ -135,8 +138,33 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
-* Thu Oct 23 2003 Than Ngo <than@redhat.com> 8:1.1.4-3
-- rebuild
+* Mon Jan 19 2004 Than Ngo <than@redhat.com> 8:1.1.95-0.1
+- KDE 3.2RC1
+
+* Fri Dec 12 2003 Than Ngo <than@redhat.com> 8:1.1.94-0.2
+- rebuild against alsa-lib 1.0.0
+
+* Mon Dec 01 2003 Than Ngo <than@redhat.com> 8:1.1.94-0.1
+- KDE 3.2 beta2
+
+* Wed Nov 26 2003 Than Ngo <than@redhat.com> 8:1.1.93-0.4
+- disable rpath
+
+* Wed Nov 26 2003 Than Ngo <than@redhat.com> 8:1.1.93-0.3
+- rebuild to fix dependant libraries check on x86_64
+
+* Tue Nov 25 2003 Than Ngo <than@redhat.com> 8:1.1.93-0.2
+- enable support alsa
+
+* Fri Oct 31 2003 Than Ngo <than@redhat.com> 8:1.1.93-0.1
+- KDE 3.2 beta1
+- remove some unneeded patch, which are now in new upstream
+
+* Tue Oct 14 2003 Than Ngo <than@redhat.com> 8:1.2-0.14_10_2003.1
+- arts-1.2-14_10_2003
+
+* Fri Oct 10 2003 Than Ngo <than@redhat.com> 8:1.1.4-2.1
+- rebuilt against qt 3.2.1
 
 * Mon Sep 29 2003 Than Ngo <than@redhat.com> 8:1.1.4-2
 - arts_debug issue (bug #104278)
