@@ -1,4 +1,3 @@
-%define snapshot %{nil}
 %define _prefix /usr
 
 %define debug 0
@@ -9,8 +8,8 @@
 
 %define libtool 1
 
-Version: 1.2.3
-Release: 3
+Version: 1.2.92
+Release: 1.1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -18,7 +17,7 @@ License: LGPL
 Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-buildroot
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}%{snapshot}.tar.bz2
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
@@ -41,11 +40,6 @@ BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
 BuildRequires: audiofile-devel
 BuildRequires: esound-devel
-
-## workaround for gcc bug on ia64
-%ifarch ia64
-%define optflags -O0 -g
-%endif
 
 %description
 arts (analog real-time synthesizer) is the sound system of KDE 3.
@@ -90,10 +84,9 @@ Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
 
 %prep
-%setup -q -n %{name}-%{version}%{snapshot}
+%setup -q
 %patch0 -p1 -b .libtool
 %patch1 -p1 -b .debug
-%patch2 -p1 -b .glib2
 %patch3 -p1 -b .pie
 
 %build
@@ -154,6 +147,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Tue Aug 03 2004 Than Ngo <than@redhat.com> 1.2.92-1.1
+- update to 3.3 beta2
+
+* Wed Jun 30 2004 Than Ngo <than@redhat.com> 1.2.91-1
+- update to 3.3 beta1
+
 * Mon Jun 28 2004 Than Ngo <than@redhat.com> 1.2.3-3
 - add buildrequires on esound-devel (bug #125293)
 
