@@ -9,7 +9,7 @@
 %define make_cvs 1
 
 Version: 1.4.0
-Release: 0.rc1.2
+Release: 0.rc1.3
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -167,6 +167,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Tue Mar 01 2005 Than Ngo <than@redhat.com> 8:1.4.0-0.rc1.3
+- rebuilt against gcc 4
+
 * Fri Feb 25 2005 Than Ngo <than@redhat.com> 8:1.4.0-0.rc1.2
 - KDE 3.4.0 rc1
 
