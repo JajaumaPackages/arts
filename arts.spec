@@ -17,7 +17,7 @@ License: LGPL
 Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-buildroot
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}-rc1.tar.bz2
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
