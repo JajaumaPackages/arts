@@ -1,52 +1,28 @@
-%define build_release 0
-%define build_beta 1
-%define build_snapshot 2
-
-%define isClean 1
-
-%define isBuild %{build_release}
-
 %define debug 0
-
-%define release_number 2
 
 %define build_for_ftp 0
 
+%define qt_version 3.1.1
+
 %define libtool 0
 
-Version: 1.0.5a
+Version: 1.1
+Release: 7
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
 License: LGPL
-Epoch: 7
+Epoch: 8
 Url: http://www.kde.org
+BuildRoot: %{_tmppath}/%{name}-buildroot
 
-%if "%{isBuild}" == "%{build_release}"
-%define release_name %{nil}
-Release: %{release_number}
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{version}.tar.bz2
-%endif
-
-%if "%{isBuild}" == "%{build_beta}"
-%define release_name beta1
-Release: 0.%{release_name}.%{release_number}
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{release_name}.tar.bz2
-%endif
-
-%if "%{isBuild}" == "%{build_snapshot}"
-%define release_name 20020807
-Release: 0.%{release_name}cvs.%{release_number}
-Source: cvs://cvs.kde.org/%{name}-%{release_name}.tar.bz2
-%endif
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Patch: arts-1.1.0-vacopy.patch
+Patch1: arts-1.1-gcc3.patch
 
 %if %{build_for_ftp}
 ExclusiveArch: %{ix86}
 %endif
-
-Patch: arts-1.0.4-x86_64.patch
-
-BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: audiofile
 
@@ -55,10 +31,9 @@ Obsoletes: kdelibs-sound
 Provides: kdelibs-sound
 
 BuildRequires: autoconf >= 2.53
-BuildRequires: automake15
-BuildRequires: qt-devel >= 3.0.5
-
-Prereq: /sbin/ldconfig
+BuildRequires: automake
+BuildRequires: qt-devel >= %{qt_version}
+BuildRequires: perl
 
 %description
 arts (analog real-time synthesizer) is the sound system of KDE 3.
@@ -76,7 +51,7 @@ playing a wave file with some effects.
 %package devel
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
-requires: %{name} = %{epoch}:%{version}-%{release}
+requires: %{name} = %{version}-%{release}
 Obsoletes: kdelibs-sound-devel
 Provides: kdelibs-sound-devel
 
@@ -96,14 +71,9 @@ Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
 
 %prep
-rm -rf $RPM_BUILD_ROOT
-
-%if "%{isBuild}" == "%{build_release}"
 %setup -q
-%else
-%setup -q -n %{name}-%{version}-%{release_name}
-%endif
 %patch -p1 -b .x86_64
+%patch1 -p1 -b .gcc3
 
 # Workaround for legacy auto* tools
 %if %{libtool}
@@ -116,30 +86,45 @@ make -f Makefile.cvs
 %endif
 
 %build
+unset QTDIR && . /etc/profile.d/qt.sh
+FLAGS="$RPM_OPT_FLAGS -fno-exceptions -D_GNU_SOURCE"
+export CXXFLAGS="$FLAGS -fno-use-cxa-atexit"
+export CFLAGS="$FLAGS"
 export PATH=`pwd`:$PATH
-export FLAGS="$RPM_OPT_FLAGS -fno-rtti -fno-exceptions -fno-check-new -D_GNU_SOURCE"
-unset QTDIR || : ; . /etc/profile.d/qt.sh
 
-CXXFLAGS="$FLAGS -fno-use-cxa-atexit" \
-CFLAGS="$FLAGS" \
-./configure --prefix=%{_prefix} \
-            --libdir=%{_libdir} \
-            --disable-debug \
-            --enable-final \
-            --includedir=%{_includedir}/kde
+%configure \
+   --includedir=%{_includedir}/kde \
+   --with-qt-libraries=$QTDIR/lib \
+   --disable-debug \
+   --enable-final
 
 make %{?_smp_mflags}
 
 %install
+rm -rf $RPM_BUILD_ROOT
+
 export PATH=`pwd`:$PATH
 export DESTDIR=$RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
 
+# don't include gcc path in .la file
+for i in $RPM_BUILD_ROOT%{_libdir}/*.la ; do
+   newdeplib=""
+   source $i
+   if echo $dependency_libs | grep "gcc-lib" >& /dev/null ; then
+      for j in $dependency_libs ; do
+         if echo $j | grep "gcc-lib" >& /dev/null ; then
+            continue
+         fi
+         newdeplib="$newdeplib $j"
+      done
+      perl -pi -e "s|.*dependency_libs=.*|dependency_libs='$newdeplib'|g" $i
+   fi
+done
+
 %clean
-%if %{isClean}
 rm -rf $RPM_BUILD_ROOT
-%endif
 
 %post -p /sbin/ldconfig
 
@@ -152,34 +137,54 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/Arts/*
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
-%{_libdir}/*.la
 %{_bindir}/artscat
 %{_bindir}/artsd*
 %{_bindir}/artsp*
 %{_bindir}/artss*
 %{_bindir}/artsw*
 %{_bindir}/artsr*
+%{_bindir}/testdhandle
 %{_libdir}/lib*.so.*
 
 %files devel
 %defattr(-,root,root)
 %{_bindir}/mcopidl
+%{_libdir}/lib*.la
 %{_libdir}/lib*.so
 %{_includedir}/kde/arts
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
 
 %changelog
-* Wed Mar  5 2003 Than Ngo <than@redhat.com> 1.0.5a-2
-- la files in arts package (bug #83607)
+* Mon Feb 24 2003 Elliot Lee <sopwith@redhat.com>
+- debuginfo rebuild
 
-* Sat Dec 21 2002 Than Ngo <than@redhat.com> 1.0.5a-1
-- update 1.0.5a
+* Thu Feb 20 2003 Than Ngo <than@redhat.com> 1.1-6
+- rebuid against gcc 3.2.2 to fix dependency in la file
+
+* Thu Feb 13 2003 Thomas Woerner <twoerner@redhat.com> 1.1-5
+- fixed artsbuilder crash (#82750)
+
+* Wed Jan 29 2003 Than Ngo <than@redhat.com> 1.1-4
+- 3.1 release
+
+* Wed Jan 22 2003 Tim Powers <timp@redhat.com>
+- rebuilt
+
+* Tue Jan 21 2003 Than Ngo <than@redhat.com> 1.1-3
+- update to rc7
+- change version, increase Epoch
+
+* Tue Dec  3 2002 Than Ngo <than@redhat.com> 1.1.0-2
+- use %%configure
+
+* Fri Nov 22 2002 Than Ngo <than@redhat.com> 1.1.0-1
+- update to 1.1.0
 
 * Sat Nov  9 2002 Than Ngo <than@redhat.com> 1.0.5-1
 - update 1.0.5
 
-* Fri Nov  8 2002 Than Ngo <than@redhat.com> 1.0.4-2..1
+* Fri Nov  8 2002 Than Ngo <than@redhat.com> 1.0.4-2.1
 - fix build problem on x86_64
 
 * Fri Nov  8 2002 Than Ngo <than@redhat.com> 1.0.4-2
