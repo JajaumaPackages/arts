@@ -10,7 +10,7 @@
 %define libtool 1
 
 Version: 1.2.3
-Release: 2
+Release: 3
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -40,6 +40,7 @@ BuildRequires: perl
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
 BuildRequires: audiofile-devel
+BuildRequires: esound-devel
 
 ## workaround for gcc bug on ia64
 %ifarch ia64
@@ -153,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Mon Jun 28 2004 Than Ngo <than@redhat.com> 1.2.3-3
+- add buildrequires on esound-devel (bug #125293)
+
 * Thu Jun 17 2004 Than Ngo <than@redhat.com> 1.2.3-2
 - rebuild
 
