@@ -5,12 +5,12 @@
 %define final 0
 
 %define alsa 1
-%define qt_version 3.2.2
+%define qt_version 3.3.1
 
 %define libtool 1
 
-Version: 1.1.95
-Release: 0.1
+Version: 1.2.1
+Release: 1.1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -21,6 +21,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}%{snapshot}.tar.bz2
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
+Patch2: arts-1.2.0-glib2.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -28,12 +29,15 @@ Obsoletes: kdelibs-sound
 Provides: kdelibs-sound
 
 %if %{alsa}
-BuildRequires: alsa-lib-devel >= 0.9.8
+BuildRequires: alsa-lib-devel >= 1.0.2
 %endif
 BuildRequires: autoconf >= 2.53
 BuildRequires: automake
 BuildRequires: qt-devel >= %{qt_version}
 BuildRequires: perl
+BuildRequires: glib2-devel
+BuildRequires: libvorbis-devel
+BuildRequires: audiofile-devel
 
 ## workaround for gcc bug on ia64
 %ifarch ia64
@@ -79,6 +83,7 @@ KDE applications using sound).
 %setup -q -n %{name}-%{version}%{snapshot}
 %patch0 -p1 -b .libtool
 %patch1 -p1 -b .debug
+%patch2 -p1 -b .glib2
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -138,6 +143,29 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Tue Mar 02 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
+* Tue Mar 02 2004 Than Ngo <than@redhat.com> 1.2.1-1
+- update to 1.2.1
+
+* Mon Feb 23 2004 Than Ngo <than@redhat.com> 8:1.2.0-1.5
+- add patch file from CVS, fix mcop warning
+- fix glib2 issue
+
+* Tue Feb 17 2004 Than Ngo <than@redhat.com> 1.2.0-1.4 
+- add missing build requirements
+- add patch file from Bero #115507
+
+* Fri Feb 13 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
+* Thu Feb 05 2004 Than Ngo <than@redhat.com> 1.2.0-0.3 
+- rebuilt against qt 3.3.0
+
+* Tue Feb 03 2004 Than Ngo <than@redhat.com> 8:1.2.0-0.1
+- 3.2.0 release
+
 * Mon Jan 19 2004 Than Ngo <than@redhat.com> 8:1.1.95-0.1
 - KDE 3.2RC1
 
