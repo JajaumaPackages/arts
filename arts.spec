@@ -1,6 +1,6 @@
 %define is_release 1
 %define beta %{nil}
-%define rel 3
+%define rel 4
 %define debug 0
 %define DATE 20020326
 Version: 1.0.0
@@ -30,7 +30,7 @@ Obsoletes: kdelibs-sound
 Provides: kdelibs-sound
 BuildRequires: autoconf253 automake15 qt-devel >= 3.0.3-10
 Source900: gccver.c
-Provides: libartscbackend.so.0 libartsflow_idl.so.1 libartsflow.so.1 libartswavplayobject.so.0 libgmcop.so.1 libkmedia2_idl.so.1 libkmedia2.so.1 libmcop_mt.so.1 libmcop.so.1 libqtmcop.so.1 libsoundserver_idl.so.1
+Provides: libartscbackend.so.0 libartsflow_idl.so.1 libartsflow.so.1 libartswavplayobject.so.0 libgmcop.so.1 libkmedia2_idl.so.1 libkmedia2.so.1 libmcop_mt.so.1 libmcop.so.1 libqtmcop.so.1 libsoundserver_idl.so.1 libx11globalcomm.so.1
 
 %description
 arts (analog real-time synthesizer) is the sound system of KDE 3.
@@ -123,27 +123,26 @@ cd ..
 
 chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
 
+
 # Set symlinks for files we renamed because of compiler ABI issues
 if [ "0`./gccver`" -lt 3001 ]; then
-	REL="gcc`./gccver -v`"
-	for i in artscbackend artswavplayobject; do
-		if [ -e $RPM_BUILD_ROOT%{_libdir}/lib${i}-${REL}.so.1 ]; then
-			ln -s lib${i}-${REL}.so.1 $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.0.0.0
-			ln -s lib${i}-${REL}.so.1 $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.0
-		elif [ -e $RPM_BUILD_ROOT%{_libdir}/lib${i}-${REL}.so ]; then
-			ln -s lib${i}-${REL}.so $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.0.0.0
-			ln -s lib${i}-${REL}.so $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.0
-		fi
-	done
-	for i in artsflow artsflow_idl gmcop kmedia2_idl kmedia2 mcop mcop_mt qtmcop soundserver_idl; do
-		if [ -e $RPM_BUILD_ROOT%{_libdir}/lib${i}-${REL}.so.1 ]; then
-			ln -s lib${i}-${REL}.so.1 $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.1.0.0
-			ln -s lib${i}-${REL}.so.1 $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.1
-		elif [ -e $RPM_BUILD_ROOT%{_libdir}/lib${i}-${REL}.so ]; then
-			ln -s lib${i}-${REL}.so $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.1.0.0
-			ln -s lib${i}-${REL}.so $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.1
-		fi
-	done
+        REL="gcc`./gccver -v`"
+	solink() {
+		sover=$1
+		somajor=`echo $sover |sed -e "s,\..*,,"`
+		shift
+		for i in $@; do
+			if [ -e $RPM_BUILD_ROOT/%{_libdir}/lib${i}-${REL}.so ]; then
+				ln -s lib${i}-${REL}.so $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.${sover}
+				ln -s lib${i}-${REL}.so $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.${somajor}
+			elif [ -e $RPM_BUILD_ROOT%{_libdir}/lib${i}-${REL}.so.? ]; then
+				ln -s `basename $RPM_BUILD_ROOT%{_libdir}/lib${i}-${REL}.so.?` $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.${sover}
+				ln -s `basename $RPM_BUILD_ROOT%{_libdir}/lib${i}-${REL}.so.?` $RPM_BUILD_ROOT/%{_libdir}/lib${i}.so.${somajor}
+			fi
+		done
+	}
+	solink 0.0.0 artscbackend artswavplayobject
+	solink 1.0.0 artsflow artsflow_idl gmcop kmedia2_idl kmedia2 mcop mcop_mt qtmcop soundserver_idl x11globalcomm
 fi
 
 %clean
@@ -171,7 +170,7 @@ fi
 %{_libdir}/libartsflow*.*
 %{_libdir}/libartswav*.*
 %{_libdir}/lib*mcop*.*
-%{_libdir}/libx11globalcomm.*
+%{_libdir}/libx11globalcomm*.*
 %{_libdir}/libsound*
 %{_libdir}/libkmedia*
 
@@ -184,6 +183,9 @@ fi
 %{_bindir}/artsc-config
 
 %changelog
+* Wed Apr 17 2002 Bernhard Rosenkraenzer <bero@redhat.com> 1.0.0-4
+- Fix dangling symlink
+
 * Mon Apr 15 2002 Bernhard Rosenkraenzer <bero@redhat.com> 1.0.0-3
 - Change sonames to something indicating the compiler version if a compiler
   < gcc 3.1 is used
