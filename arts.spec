@@ -125,6 +125,11 @@ export DESTDIR=$RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
 
+# work around for rpm bug on s390x
+%ifarch s390x
+strip $RPM_BUILD_ROOT%{_bindir}/mcopidl
+%endif
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
