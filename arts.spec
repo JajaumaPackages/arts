@@ -1,34 +1,64 @@
-%define is_release 1
-%define beta %{nil}
-%define rel 1
+%define build_release 0
+%define build_beta 1
+%define build_snapshot 2
+
+%define isClean 1
+
+%define isBuild %{build_release}
+
 %define debug 0
-%define DATE 20020807
-Version: 1.0.3
-%define ver %{version}%{beta}
+
+%define release_number 1
+
+%define build_for_ftp 0
+
+%define libtool 0
+
+Version: 1.0.5a
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
-#%if %{is_release}
-#Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{ver}.tar.bz2
-#%else
-Source: cvs://cvs.kde.org/%{name}-%{DATE}.tar.bz2
-#%endif
 Name: arts
-Epoch: 7
-%if %{is_release}
-%if "%{beta}" != ""
-Release: 0.%{beta}.%{rel}
-%else
-Release: %{rel}
-%endif
-%else
-Release: 0.cvs%{DATE}.%{rel}
-%endif
 Group: System Environment/Daemons
 License: LGPL
+Epoch: 7
+Url: http://www.kde.org
+
+%if "%{isBuild}" == "%{build_release}"
+%define release_name %{nil}
+Release: %{release_number}
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{version}.tar.bz2
+%endif
+
+%if "%{isBuild}" == "%{build_beta}"
+%define release_name beta1
+Release: 0.%{release_name}.%{release_number}
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{release_name}.tar.bz2
+%endif
+
+%if "%{isBuild}" == "%{build_snapshot}"
+%define release_name 20020807
+Release: 0.%{release_name}cvs.%{release_number}
+Source: cvs://cvs.kde.org/%{name}-%{release_name}.tar.bz2
+%endif
+
+%if %{build_for_ftp}
+ExclusiveArch: %{ix86}
+%endif
+
+Patch: arts-1.0.4-x86_64.patch
+
 BuildRoot: %{_tmppath}/%{name}-buildroot
+
 Requires: audiofile
+
 Obsoletes: kdelibs-sound
+
 Provides: kdelibs-sound
-BuildRequires: autoconf >= 2.53 automake15 qt-devel >= 3.0.3-10
+
+BuildRequires: autoconf >= 2.53
+BuildRequires: automake15
+BuildRequires: qt-devel >= 3.0.5
+
+Prereq: /sbin/ldconfig
 
 %description
 arts (analog real-time synthesizer) is the sound system of KDE 3.
@@ -46,6 +76,7 @@ playing a wave file with some effects.
 %package devel
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
+requires: %{name} = %{epoch}:%{version}-%{release}
 Obsoletes: kdelibs-sound-devel
 Provides: kdelibs-sound-devel
 
@@ -67,30 +98,35 @@ KDE applications using sound).
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-#%if %{is_release}
-#%setup -q -n %{name}-%{ver}
-#%else
-%setup -q -n %{name}
-#%endif
+%if "%{isBuild}" == "%{build_release}"
+%setup -q
+%else
+%setup -q -n %{name}-%{version}-%{release_name}
+%endif
+%patch -p1 -b .x86_64
 
 # Workaround for legacy auto* tools
+%if %{libtool}
+[ -x /usr/bin/autoconf-2.5? ] && ln -s /usr/bin/autoconf-2.5? autoconf
+[ -x /usr/bin/autoheader-2.5? ] && ln -s /usr/bin/autoheader-2.5? autoheader
 [ -x /usr/bin/aclocal-1.5 ] && ln -s /usr/bin/aclocal-1.5 aclocal
 [ -x /usr/bin/automake-1.5 ] && ln -s /usr/bin/automake-1.5 automake
 export PATH=`pwd`:$PATH
-# End workaround
-
-make -f Makefile.cvs || :
+make -f Makefile.cvs
+%endif
 
 %build
 export PATH=`pwd`:$PATH
 export FLAGS="$RPM_OPT_FLAGS -fno-rtti -fno-exceptions -fno-check-new -D_GNU_SOURCE"
 unset QTDIR || : ; . /etc/profile.d/qt.sh
 
-CXXFLAGS="$FLAGS" CFLAGS="$FLAGS" ./configure \
-	--prefix=%{_prefix} \
-	--disable-debug \
-	--enable-final \
-	--includedir=%{_includedir}/kde
+CXXFLAGS="$FLAGS -fno-use-cxa-atexit" \
+CFLAGS="$FLAGS" \
+./configure --prefix=%{_prefix} \
+            --libdir=%{_libdir} \
+            --disable-debug \
+            --enable-final \
+            --includedir=%{_includedir}/kde
 
 make %{?_smp_mflags}
 
@@ -101,7 +137,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
 chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
 
 %clean
-# rm -rf $RPM_BUILD_ROOT
+%if %{isClean}
+rm -rf $RPM_BUILD_ROOT
+%endif
 
 %post -p /sbin/ldconfig
 
@@ -120,23 +158,34 @@ chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
 %{_bindir}/artss*
 %{_bindir}/artsw*
 %{_bindir}/artsr*
-%{_libdir}/libartsc*.??*
-%{_libdir}/libartsdsp*.*
-%{_libdir}/libartsflow*.*
-%{_libdir}/libartswav*.*
-%{_libdir}/lib*mcop*.*
-%{_libdir}/libx11globalcomm*.*
-%{_libdir}/libsound*
-%{_libdir}/libkmedia*
+%{_libdir}/lib*.so.*
 
 %files devel
 %defattr(-,root,root)
 %{_bindir}/mcopidl
+%{_libdir}/lib*.la
+%{_libdir}/lib*.so
 %{_includedir}/kde/arts
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
 
 %changelog
+* Sat Dec 21 2002 Than Ngo <than@redhat.com> 1.0.5a-1
+- update 1.0.5a
+
+* Sat Nov  9 2002 Than Ngo <than@redhat.com> 1.0.5-1
+- update 1.0.5
+
+* Fri Nov  8 2002 Than Ngo <than@redhat.com> 1.0.4-2..1
+- fix build problem on x86_64
+
+* Fri Nov  8 2002 Than Ngo <than@redhat.com> 1.0.4-2
+- fix build problem
+
+* Mon Oct 14 2002 Than Ngo <than@redhat.com> 1.0.4-1
+- 1.0.4
+- cleanup specfile
+
 * Mon Aug 12 2002 Bernhard Rosenkraenzer <bero@redhat.com> 1.0.3-1
 - 1.0.3
 
