@@ -25,7 +25,7 @@ Patch2: arts-1.3.92-glib2.patch
 Patch3: arts-1.3.92-pie.patch
 Patch4: arts-1.3.0-multilib.patch
 Patch5: arts-1.3.1-alsa.patch
-Patch6: admin-amd64-visibility.patch
+Patch6: admin-visibility.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
