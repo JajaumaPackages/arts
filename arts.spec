@@ -10,7 +10,7 @@
 %define libtool 1
 
 Version: 1.2.2
-Release: 2
+Release: 3
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -23,6 +23,7 @@ Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}%{snap
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.2.0-glib2.patch
+Patch3: arts-1.2.2-pie.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -92,6 +93,7 @@ KDE applications using sound).
 %patch0 -p1 -b .libtool
 %patch1 -p1 -b .debug
 %patch2 -p1 -b .glib2
+%patch3 -p1 -b .pie
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -151,6 +153,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Thu May 13 2004 Than Ngo <than@redhat.com> 1.2.2-3
+- add patch to enable PIE build of artsd
+
 * Mon Apr 19 2004 Than Ngo <than@redhat.com> 1.2.2-2
 - #120265 #119642 -devel req alsa-lib-devel esound-devel glib2-devel
 
