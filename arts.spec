@@ -9,8 +9,8 @@
 
 %define libtool 1
 
-Version: 1.2.1
-Release: 1.1
+Version: 1.2.2
+Release: 2
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -19,6 +19,7 @@ Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-buildroot
 Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}%{snapshot}.tar.bz2
+
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.2.0-glib2.patch
@@ -60,7 +61,14 @@ playing a wave file with some effects.
 %package devel
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
-requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: esound-devel
+Requires: glib2-devel
+Requires: libvorbis-devel
+Requires: audiofile-devel
+%if %{alsa}
+Requires: alsa-lib-devel
+%endif
 Obsoletes: kdelibs-sound-devel
 Provides: kdelibs-sound-devel
 
@@ -143,6 +151,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Mon Apr 19 2004 Than Ngo <than@redhat.com> 1.2.2-2
+- #120265 #119642 -devel req alsa-lib-devel esound-devel glib2-devel
+
+* Mon Apr 12 2004 Than Ngo <than@redhat.com> 1.2.2-1
+- 1.2.2 release
+
+* Fri Apr 02 2004 Than Ngo <than@redhat.com> 1.2.1-2
+- add several fixes from stable branch
+
 * Tue Mar 02 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
