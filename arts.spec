@@ -9,7 +9,7 @@
 %define libtool 1
 
 Version: 1.3.0
-Release: 1
+Release: 3
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -34,7 +34,7 @@ BuildRequires: alsa-lib-devel >= 1.0.2
 %endif
 BuildRequires: autoconf >= 2.53
 BuildRequires: automake
-BuildRequires: qt-devel >= %{qt_version}
+BuildRequires: qt-devel >= 1:%{qt_version}
 BuildRequires: perl
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
@@ -87,6 +87,7 @@ KDE applications using sound).
 %setup -q
 %patch0 -p1 -b .libtool
 %patch1 -p1 -b .debug
+%patch2 -p1 -b .glib
 %patch3 -p1 -b .pie
 
 %build
@@ -147,6 +148,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Fri Sep 03 2004 Colin Walters <walters@redhat.com> 1.3.0-3
+- Fix trivial conflict in glib patch and reapply; this
+  removes dependency on glib2.0 and therefore prevents
+  symbol clashes with applications loading arts still
+  using glib 1.2, like XMMS.
+
+* Mon Aug 23 2004 Than Ngo <than@redhat.com> 1.3.0-2
+- add missing epoch tag
+
 * Thu Aug 19 2004 Than Ngo <than@redhat.com> 1.3.0-1
 - update to 1.3.0 release
 
