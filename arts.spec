@@ -9,7 +9,7 @@
 %define libtool 1
 
 Version: 1.3.0
-Release: 3
+Release: 4
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -23,6 +23,7 @@ Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.2.0-glib2.patch
 Patch3: arts-1.2.2-pie.patch
+Patch4: arts-1.3.0-multilib.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -89,6 +90,7 @@ KDE applications using sound).
 %patch1 -p1 -b .debug
 %patch2 -p1 -b .glib
 %patch3 -p1 -b .pie
+%patch4 -p1 -b .multilib
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -136,8 +138,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
 %{_libdir}/*.la
-%{_bindir}/arts*
 %{_libdir}/lib*.so.*
+%{_bindir}/artscat
+%{_bindir}/artsd
+%{_bindir}/artsdsp
+%{_bindir}/artsplay
+%{_bindir}/artsrec
+%{_bindir}/artsshell
+%{_bindir}/artswrapper
 
 %files devel
 %defattr(-,root,root)
@@ -148,6 +156,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Wed Sep 15 2004 Than Ngo <than@redhat.com> 1.3.0-4 
+- fix multilib problem #132576
+
 * Fri Sep 03 2004 Colin Walters <walters@redhat.com> 1.3.0-3
 - Fix trivial conflict in glib patch and reapply; this
   removes dependency on glib2.0 and therefore prevents
