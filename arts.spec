@@ -5,7 +5,7 @@
 %define libtool 0
 
 Version: 1.1.4
-Release: 0.9x.1
+Release: 3
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -16,18 +16,24 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Patch: arts-1.1.0-vacopy.patch
+Patch1: arts-1.1.4-flags.patch
 Patch2: kde-libtool.patch
+Patch3: arts-1.1.4-debug.patch
 
+Prereq: /sbin/ldconfig
 Requires: audiofile
-
 Obsoletes: kdelibs-sound
-
 Provides: kdelibs-sound
 
 BuildRequires: autoconf >= 2.53
 BuildRequires: automake
 BuildRequires: qt-devel >= %{qt_version}
 BuildRequires: perl
+
+## workaround for gcc bug on ia64
+%ifarch ia64
+%define optflags -O0 -g
+%endif
 
 %description
 arts (analog real-time synthesizer) is the sound system of KDE 3.
@@ -67,14 +73,18 @@ KDE applications using sound).
 %prep
 %setup -q
 %patch -p1 -b .x86_64
+%patch1 -p1 -b .flags
 %patch2 -p1 -b .libtool
+%patch3 -p1 -b .debug
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
-FLAGS="$RPM_OPT_FLAGS -fno-exceptions -D_GNU_SOURCE"
-export CXXFLAGS="$FLAGS -fno-use-cxa-atexit"
+FLAGS="$RPM_OPT_FLAGS"
+export CXXFLAGS="$FLAGS"
 export CFLAGS="$FLAGS"
 export PATH=`pwd`:$PATH
+
+make -f admin/Makefile.common cvs
 
 %configure \
    --includedir=%{_includedir}/kde \
@@ -125,10 +135,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
-* Mon Sep 15 2003 Than Ngo <than@redhat.com> 8:1.1.4-0.9x.1
-- 3.1.4
-- remove arts-1.1-gcc3.patch, which is included in 3.1.4
+* Thu Oct 23 2003 Than Ngo <than@redhat.com> 8:1.1.4-3
+- rebuild
 
+* Mon Sep 29 2003 Than Ngo <than@redhat.com> 8:1.1.4-2
+- arts_debug issue (bug #104278)
+
+* Mon Sep 29 2003 Than Ngo <than@redhat.com> 8:1.1.4-1
+- 3.1.4
+
+* Thu Aug 28 2003 Than Ngo <than@redhat.com> 8:1.1.3-3
+- rebuild
+
+* Thu Jul 31 2003 Than Ngo <than@redhat.com> 8:1.1.3-2
+- add workaround for gcc bug on ia64
+
+* Tue Jul 29 2003 Than Ngo <than@redhat.com> 8:1.1.3-1
+- add Prereq: /sbin/ldconfig
 
 * Wed Jul 16 2003 Than Ngo <than@redhat.com> 8:1.1.3-0.9x.1
 - 3.1.3
