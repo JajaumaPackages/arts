@@ -6,7 +6,7 @@
 %define alsa 1
 %define qt_version 3.3.3
 
-%define libtool 1
+%define make_cvs 1
 
 Version: 1.4.0
 Release: 0.rc1.2
@@ -25,6 +25,7 @@ Patch2: arts-1.3.92-glib2.patch
 Patch3: arts-1.3.92-pie.patch
 Patch4: arts-1.3.0-multilib.patch
 Patch5: arts-1.3.1-alsa.patch
+Patch6: admin-amd64-visibility.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -93,6 +94,9 @@ KDE applications using sound).
 %patch3 -p1 -b .pie
 %patch4 -p1 -b .multilib
 %patch5 -p1 -b .alsa
+%ifarch x86_64
+%patch6 -p1 -b .amd64
+%endif
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -101,7 +105,9 @@ export CXXFLAGS="$FLAGS"
 export CFLAGS="$FLAGS"
 export PATH=`pwd`:$PATH
 
-make -f admin/Makefile.common cvs
+%if %{make_cvs}
+  make -f admin/Makefile.common cvs
+%endif
 
 %configure \
 %if %{alsa}
