@@ -1,9 +1,9 @@
 %define is_release 1
 %define beta %{nil}
-%define rel 5
+%define rel 1
 %define debug 0
 %define DATE 20020807
-Version: 1.0.2
+Version: 1.0.3
 %define ver %{version}%{beta}
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 #%if %{is_release}
@@ -15,12 +15,12 @@ Name: arts
 Epoch: 7
 %if %{is_release}
 %if "%{beta}" != ""
-Release: 1.%{beta}.%{rel}
+Release: 0.%{beta}.%{rel}
 %else
 Release: %{rel}
 %endif
 %else
-Release: 1.cvs%{DATE}.%{rel}
+Release: 0.cvs%{DATE}.%{rel}
 %endif
 Group: System Environment/Daemons
 License: LGPL
@@ -137,6 +137,9 @@ chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
 %{_bindir}/artsc-config
 
 %changelog
+* Mon Aug 12 2002 Bernhard Rosenkraenzer <bero@redhat.com> 1.0.3-1
+- 1.0.3
+
 * Sat Aug 10 2002 Elliot Lee <sopwith@redhat.com>
 - rebuilt with gcc-3.2 (we hope)
 
