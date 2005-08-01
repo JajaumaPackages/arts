@@ -7,7 +7,7 @@
 %define qt_version 3.3.4
 
 %define make_cvs 1
-%define disable_gcc_check_and_hidden_visibility 0
+%define disable_gcc_check_and_hidden_visibility 1
 
 Version: 1.4.2
 Release: 1
