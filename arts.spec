@@ -4,12 +4,12 @@
 %define final 0
 
 %define alsa 1
-%define qt_version 3.3.4
+%define qt_version 3.3.5
 
 %define make_cvs 1
 %define disable_gcc_check_and_hidden_visibility 1
 
-Version: 1.4.2
+Version: 1.4.91
 Release: 1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
@@ -23,8 +23,6 @@ Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.b
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
-Patch3: arts-1.3.92-pie.patch
-Patch4: arts-1.3.0-multilib.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
 
@@ -92,8 +90,6 @@ KDE applications using sound).
 %patch0 -p1 -b .libtool
 %patch1 -p1 -b .debug
 %patch2 -p1 -b .glib
-%patch3 -p1 -b .pie
-%patch4 -p1 -b .multilib
 %patch5 -p1 -b .alsa
 %patch6 -p1 -b .glibc
 
@@ -175,6 +171,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Tue Sep 27 2005 Than Ngo <than@redhat.com> 8:1.4.91-1
+- update to KDE 3.5 beta1
+- drop multilib and pie patches which are included in new upstream
+
 * Mon Aug 01 2005 Than Ngo <than@redhat.com> 8:1.4.2-1
 - update to 1.4.2
 
