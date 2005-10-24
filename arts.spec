@@ -9,7 +9,7 @@
 %define make_cvs 1
 %define disable_gcc_check_and_hidden_visibility 1
 
-Version: 1.4.91
+Version: 1.4.92
 Release: 1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
@@ -171,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Mon Oct 24 2005 Than Ngo <than@redhat.com> 8:1.4.92-1
+- update to KDE 3.5 beta2
+
 * Tue Sep 27 2005 Than Ngo <than@redhat.com> 8:1.4.91-1
 - update to KDE 3.5 beta1
 - drop multilib and pie patches which are included in new upstream
