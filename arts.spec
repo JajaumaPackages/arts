@@ -163,6 +163,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsrec
 %{_bindir}/artsshell
 %{_bindir}/artswrapper
+%{_bindir}/lnusertemp
 
 %files devel
 %defattr(-,root,root)
