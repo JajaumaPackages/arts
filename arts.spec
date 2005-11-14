@@ -9,8 +9,8 @@
 %define make_cvs 1
 %define disable_gcc_check_and_hidden_visibility 1
 
-Version: 1.4.92
-Release: 2
+Version: 1.5.0
+Release: 0.1.rc1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -25,7 +25,7 @@ Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
-Patch7: arts-1.4.91-lnusertemp.patch
+Patch7: arts-1.5.0-lnusertemp.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -163,7 +163,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsrec
 %{_bindir}/artsshell
 %{_bindir}/artswrapper
-%{_bindir}/lnusertemp
 
 %files devel
 %defattr(-,root,root)
@@ -174,6 +173,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Mon Nov 14 2005 Than Ngo <than@redhat.com> 8:1.5.0-0.1.rc1
+- update to 3.5.0 rc1
+- another patch to fix lnusertemp problem
+
 * Fri Nov 04 2005 Than Ngo <than@redhat.com> 8:1.4.92-2
 - fix lnusertemp problem #169631
 
