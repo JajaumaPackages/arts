@@ -25,7 +25,6 @@ Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
-Patch7: arts-1.5.0-lnusertemp.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -93,7 +92,6 @@ KDE applications using sound).
 %patch2 -p1 -b .glib
 %patch5 -p1 -b .alsa
 %patch6 -p1 -b .glibc
-%patch7 -p1 -b .lnusertemp
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
