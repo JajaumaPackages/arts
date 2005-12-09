@@ -10,7 +10,7 @@
 %define disable_gcc_check_and_hidden_visibility 1
 
 Version: 1.5.0
-Release: 0.1.rc2
+Release: 0.1.rc2.1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -171,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
+- rebuilt
+
 * Thu Nov 24 2005 Than Ngo <than@redhat.com> 8:1.5.0-0.1.rc2
 - update to 3.5.0 rc2
 
