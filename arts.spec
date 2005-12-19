@@ -10,7 +10,7 @@
 %define disable_gcc_check_and_hidden_visibility 1
 
 Version: 1.5.0
-Release: 0.1.rc2.1
+Release: 1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -25,6 +25,7 @@ Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
+Patch7: arts-1.5.0-check_tmp_dir.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -92,6 +93,7 @@ KDE applications using sound).
 %patch2 -p1 -b .glib
 %patch5 -p1 -b .alsa
 %patch6 -p1 -b .glibc
+%patch7 -p1 -b .check_tmp_dir
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -171,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Mon Dec 19 2005 Than Ngo <than@redhat.com> 1.5.0-1
+- apply patch to fix #169631 
+
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
 
