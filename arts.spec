@@ -10,7 +10,7 @@
 %define disable_gcc_check_and_hidden_visibility 1
 
 Version: 1.5.0
-Release: 1
+Release: 2
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -102,18 +102,16 @@ export CXXFLAGS="$FLAGS"
 export CFLAGS="$FLAGS"
 export PATH=`pwd`:$PATH
 
-%if %{disable_gcc_check_and_hidden_visibility}
-  # disable gcc check
-  perl -pi -e "s|KDE_CHECK_FOR_BAD_COMPILER$|dnl KDE_CHECK_FOR_BAD_COMPILER|" admin/acinclude.m4.in
-  # disable hidden visibility
-  perl -pi -e "s|KDE_ENABLE_HIDDEN_VISIBILITY$|dnl KDE_ENABLE_HIDDEN_VISIBILITY|" configure.in.in
-%endif
-
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
 %endif
 
 %configure \
+   --enable-new-ldflags \
+   --disable-dependency-tracking \
+%if %{disable_gcc_check_and_hidden_visibility}
+   --disable-gcc-hidden-visibility \
+%endif
 %if %{alsa}
    --with-alsa \
 %endif
@@ -123,6 +121,7 @@ export PATH=`pwd`:$PATH
    --includedir=%{_includedir}/kde \
    --with-qt-libraries=$QTDIR/lib \
    --disable-debug \
+   --disable-warnings \
    --disable-rpath
 
 make %{?_smp_mflags}
@@ -173,6 +172,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/artsc-config
 
 %changelog
+* Wed Jan 18 2006 Than Ngo <than@redhat.com> 1.5.0-2
+- rebuilt with --enable-new-ldflags
+
 * Mon Dec 19 2005 Than Ngo <than@redhat.com> 1.5.0-1
 - apply patch to fix #169631 
 
