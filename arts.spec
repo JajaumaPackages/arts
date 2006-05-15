@@ -19,6 +19,7 @@ Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Source1: gslconfig-wrapper.h
 
 Patch0: kde-libtool.patch
 Patch1: arts-1.1.4-debug.patch
@@ -26,7 +27,7 @@ Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
-Patch8: gslconfig-wrapper.h
+Patch8: arts-1.5.2-multilib.patch
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
