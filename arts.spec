@@ -1,4 +1,4 @@
-%define _prefix /usr
+%define multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64
 
 %define debug 0
 %define final 0
@@ -10,7 +10,7 @@
 %define disable_gcc_check_and_hidden_visibility 1
 
 Version: 1.5.2
-Release: 1
+Release: 2
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -26,6 +26,7 @@ Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
+Patch8: gslconfig-wrapper.h
 
 Prereq: /sbin/ldconfig
 Requires: audiofile
@@ -94,6 +95,7 @@ KDE applications using sound).
 %patch5 -p1 -b .alsa
 %patch6 -p1 -b .glibc
 %patch7 -p1 -b .check_tmp_dir
+%patch8 -p1 -b .multilib
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
@@ -127,20 +129,20 @@ export PATH=`pwd`:$PATH
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 export PATH=`pwd`:$PATH
-export DESTDIR=$RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT install
-chmod a+x $RPM_BUILD_ROOT%{_libdir}/*
+make DESTDIR=%{buildroot} install
 
-# work around for rpm bug on s390x
-%ifarch s390x
-strip $RPM_BUILD_ROOT%{_bindir}/mcopidl
+%ifarch %{multilib_arches}
+# Ugly hack to allow parallel installation of 32-bit and 64-bit arts-devel
+  mv  %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig.h \
+      %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig-%{_arch}.h
+  install -c -m644 %{SOURCE1}  %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig.h
 %endif
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf  %{buildroot}
 
 %post -p /sbin/ldconfig
 
@@ -170,8 +172,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/kde/arts
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
+%{_libdir}/pkgconfig/artsc.pc
 
 %changelog
+* Mon May 15 2006 Than Ngo <than@redhat.com> 8:1.5.2-2
+- fix multilib issue
+
 * Tue Mar 21 2006 Than Ngo <than@redhat.com> 8:1.5.2-1
 - update to 1.5.2
 
