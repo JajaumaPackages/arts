@@ -4,13 +4,13 @@
 %define final 0
 
 %define alsa 1
-%define qt_version 3.3.5
+%define qt_version 3.3.6
 
 %define make_cvs 1
 %define disable_gcc_check_and_hidden_visibility 1
 
-Version: 1.5.2
-Release: 2
+Version: 1.5.3
+Release: 1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -157,7 +157,7 @@ rm -rf  %{buildroot}
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
 %{_libdir}/*.la
-%{_libdir}/lib*.so.*
+%{_libdir}/lib*.so*
 %{_bindir}/artscat
 %{_bindir}/artsd
 %{_bindir}/artsdsp
@@ -169,13 +169,15 @@ rm -rf  %{buildroot}
 %files devel
 %defattr(-,root,root)
 %{_bindir}/mcopidl
-%{_libdir}/lib*.so
 %{_includedir}/kde/arts
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
 %{_libdir}/pkgconfig/artsc.pc
 
 %changelog
+* Wed May 31 2006 Than Ngo <than@redhat.com> 8:1.5.3-1
+- update to 1.5.3
+
 * Mon May 15 2006 Than Ngo <than@redhat.com> 8:1.5.2-2
 - fix multilib issue
 
