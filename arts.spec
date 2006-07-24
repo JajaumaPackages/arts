@@ -3,14 +3,12 @@
 %define debug 0
 %define final 0
 
-%define alsa 1
 %define qt_version 3.3.6
 
 %define make_cvs 1
-%define disable_gcc_check_and_hidden_visibility 1
 
-Version: 1.5.3
-Release: 2
+Version: 1.5.4
+Release: 0.pre1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -18,10 +16,10 @@ License: LGPL
 Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-1.5.3.tar.bz2
 Source1: gslconfig-wrapper.h
 
-Patch0: kde-libtool.patch
+Patch0: arts-1.5.3-1.5.4.patch
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
@@ -34,11 +32,10 @@ Requires: audiofile
 Obsoletes: kdelibs-sound
 Provides: kdelibs-sound
 
-%if %{alsa}
 BuildRequires: alsa-lib-devel >= 1.0.2
-%endif
 BuildRequires: autoconf >= 2.53
 BuildRequires: automake
+BuildRequires: libtool
 BuildRequires: qt-devel >= 1:%{qt_version}
 BuildRequires: perl
 BuildRequires: glib2-devel
@@ -67,9 +64,7 @@ Requires: esound-devel
 Requires: glib2-devel
 Requires: libvorbis-devel
 Requires: audiofile-devel
-%if %{alsa}
 Requires: alsa-lib-devel
-%endif
 Obsoletes: kdelibs-sound-devel
 Provides: kdelibs-sound-devel
 
@@ -89,8 +84,8 @@ Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
 
 %prep
-%setup -q
-%patch0 -p1 -b .libtool
+%setup -q -n %{name}-1.5.3
+%patch0 -p0 -b .libtool
 %patch1 -p1 -b .debug
 %patch2 -p1 -b .glib
 %patch5 -p1 -b .alsa
@@ -100,10 +95,6 @@ KDE applications using sound).
 
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
-FLAGS="$RPM_OPT_FLAGS"
-export CXXFLAGS="$FLAGS"
-export CFLAGS="$FLAGS"
-export PATH=`pwd`:$PATH
 
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
@@ -112,12 +103,8 @@ export PATH=`pwd`:$PATH
 %configure \
    --enable-new-ldflags \
    --disable-dependency-tracking \
-%if %{disable_gcc_check_and_hidden_visibility}
    --disable-gcc-hidden-visibility \
-%endif
-%if %{alsa}
    --with-alsa \
-%endif
 %if %{final}
    --enable-final \
 %endif
@@ -175,6 +162,9 @@ rm -rf  %{buildroot}
 %{_libdir}/pkgconfig/artsc.pc
 
 %changelog
+* Mon Jul 24 2006 Than Ngo <than@redhat.com> 8:1.5.4-0.pre1
+- prerelease of 3.5.4 (from the first-cut tag)
+
 * Tue Jul 18 2006 Than Ngo <than@redhat.com> 8:1.5.3-2
 - rebuild
 
