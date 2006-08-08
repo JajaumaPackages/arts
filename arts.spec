@@ -8,18 +8,17 @@
 %define make_cvs 1
 
 Version: 1.5.4
-Release: 0.pre1
+Release: 1
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
 License: LGPL
 Epoch: 8
 Url: http://www.kde.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-1.5.3.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Source1: gslconfig-wrapper.h
 
-Patch0: arts-1.5.3-1.5.4.patch
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
@@ -27,8 +26,10 @@ Patch6: arts-1.4.0-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
 
-Prereq: /sbin/ldconfig
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 Requires: audiofile
+
 Obsoletes: kdelibs-sound
 Provides: kdelibs-sound
 
@@ -84,8 +85,7 @@ Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
 
 %prep
-%setup -q -n %{name}-1.5.3
-%patch0 -p0 -b .libtool
+%setup -q
 %patch1 -p1 -b .debug
 %patch2 -p1 -b .glib
 %patch5 -p1 -b .alsa
@@ -162,6 +162,9 @@ rm -rf  %{buildroot}
 %{_libdir}/pkgconfig/artsc.pc
 
 %changelog
+* Tue Aug 08 2006 Than Ngo <than@redhat.com> 8:1.5.4-1
+- rebuilt
+
 * Mon Jul 24 2006 Than Ngo <than@redhat.com> 8:1.5.4-0.pre1
 - prerelease of 3.5.4 (from the first-cut tag)
 
