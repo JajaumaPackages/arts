@@ -7,8 +7,8 @@
 
 %define make_cvs 1
 
-Version: 1.5.4
-Release: 1
+Version: 1.5.5
+Release: 1%{?dist}
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -16,7 +16,7 @@ License: LGPL
 Epoch: 8
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Source0: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Source1: gslconfig-wrapper.h
 
 Patch1: arts-1.1.4-debug.patch
@@ -143,8 +143,8 @@ rm -rf  %{buildroot}
 %{_libdir}/mcop/Arts/*
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
+%{_libdir}/lib*.so.*
 %{_libdir}/*.la
-%{_libdir}/lib*.so*
 %{_bindir}/artscat
 %{_bindir}/artsd
 %{_bindir}/artsdsp
@@ -160,8 +160,15 @@ rm -rf  %{buildroot}
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
 %{_libdir}/pkgconfig/artsc.pc
+%{_libdir}/lib*.so
 
 %changelog
+* Tue Nov 14 2006 Than Ngo <than@redhat.com> - 6:1.5.5-1.fc7
+- rebuild
+
+* Wed Oct 25 2006 Than Ngo <than@redhat.com> 8:1.5.5-0.1.fc6
+- 1.5.5
+
 * Tue Aug 08 2006 Than Ngo <than@redhat.com> 8:1.5.4-1
 - rebuilt
 
