@@ -7,7 +7,7 @@
 
 %define make_cvs 1
 
-Version: 1.5.5
+Version: 1.5.6
 Release: 1%{?dist}
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
@@ -163,6 +163,9 @@ rm -rf  %{buildroot}
 %{_libdir}/lib*.so
 
 %changelog
+* Wed Jan 24 2007 Than Ngo <than@redhat.com> - 6:1.5.6-1.fc7
+- 1.5.6
+
 * Tue Nov 14 2006 Than Ngo <than@redhat.com> - 6:1.5.5-1.fc7
 - rebuild
 
