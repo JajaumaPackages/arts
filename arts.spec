@@ -163,7 +163,7 @@ rm -rf  %{buildroot}
 %{_libdir}/lib*.so
 
 %changelog
-* Mo Feb 26 2007 Than Ngo <than@redhat.com> - 6:1.5.6-2.fc7
+* Mon Feb 26 2007 Than Ngo <than@redhat.com> - 6:1.5.6-2.fc7
 - cleanup specfile
 
 * Wed Jan 24 2007 Than Ngo <than@redhat.com> - 6:1.5.6-1.fc7
