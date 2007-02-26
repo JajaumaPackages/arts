@@ -3,12 +3,12 @@
 %define debug 0
 %define final 0
 
-%define qt_version 3.3.6
+%define qt_version 3.3.7
 
 %define make_cvs 1
 
 Version: 1.5.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
 Group: System Environment/Daemons
@@ -28,7 +28,6 @@ Patch8: arts-1.5.2-multilib.patch
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-Requires: audiofile
 
 Obsoletes: kdelibs-sound
 Provides: kdelibs-sound
@@ -66,6 +65,7 @@ Requires: glib2-devel
 Requires: libvorbis-devel
 Requires: audiofile-devel
 Requires: alsa-lib-devel
+
 Obsoletes: kdelibs-sound-devel
 Provides: kdelibs-sound-devel
 
@@ -163,6 +163,9 @@ rm -rf  %{buildroot}
 %{_libdir}/lib*.so
 
 %changelog
+* Mo Feb 26 2007 Than Ngo <than@redhat.com> - 6:1.5.6-2.fc7
+- cleanup specfile
+
 * Wed Jan 24 2007 Than Ngo <than@redhat.com> - 6:1.5.6-1.fc7
 - 1.5.6
 
