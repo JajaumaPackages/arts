@@ -1,6 +1,5 @@
 %define multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64
 
-%define debug 0
 %define final 0
 
 %define qt_version 3.3.7
