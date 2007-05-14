@@ -1,18 +1,17 @@
 %define multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64
 
-%define final 0
-
+%define final 1 
 %define qt_version 3.3.7
-
 %define make_cvs 1
 
-Version: 1.5.6
-Release: 2%{?dist}
-Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Name: arts
+Summary: aRts (analog realtime synthesizer) - the KDE sound system 
 Group: System Environment/Daemons
-License: LGPL
 Epoch: 8
+Version: 1.5.6
+Release: 3%{?dist}
+
+License: LGPL
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
@@ -25,22 +24,24 @@ Patch6: arts-1.4.0-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
 
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
-
-Obsoletes: kdelibs-sound
-Provides: kdelibs-sound
-
-BuildRequires: alsa-lib-devel >= 1.0.2
-BuildRequires: autoconf >= 2.53
-BuildRequires: automake
-BuildRequires: libtool
 BuildRequires: qt-devel >= 1:%{qt_version}
-BuildRequires: perl
+## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
+#global qt_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo 3.3)
+#Requires: qt >= 1:%{qt_ver}
+BuildRequires: alsa-lib-devel
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
 BuildRequires: audiofile-devel
 BuildRequires: esound-devel
+%if 0%{?fedora} > 4
+BuildRequires: jack-audio-connection-kit-devel
+%endif
+BuildRequires: nas-devel
+BuildRequires: findutils sed
+%if %{make_cvs}
+BuildRequires: automake libtool
+%endif
+
 
 %description
 arts (analog real-time synthesizer) is the sound system of KDE 3.
@@ -59,27 +60,15 @@ playing a wave file with some effects.
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
 Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: qt-devel
+Requires: pkgconfig
+## those below can/should be omitted from future builds -- Rex
 Requires: esound-devel
 Requires: glib2-devel
 Requires: libvorbis-devel
 Requires: audiofile-devel
 Requires: alsa-lib-devel
-
-Obsoletes: kdelibs-sound-devel
-Provides: kdelibs-sound-devel
-
 %description devel
-arts (analog real-time synthesizer) is the sound system of KDE 3.
-
-The principle of arts is to create/process sound using small modules which do
-certain tasks. These may be create a waveform (oscillators), play samples,
-filter data, add signals, perform effects like delay/flanger/chorus, or
-output the data to the soundcard.
-
-By connecting all those small modules together, you can perform complex
-tasks like simulating a mixer, generating an instrument or things like
-playing a wave file with some effects.
-
 Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
 
@@ -92,28 +81,27 @@ KDE applications using sound).
 %patch7 -p1 -b .check_tmp_dir
 %patch8 -p1 -b .multilib
 
-%build
-unset QTDIR && . /etc/profile.d/qt.sh
-
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
 %endif
 
+
+%build
+unset QTDIR && . /etc/profile.d/qt.sh
+
 %configure \
-   --enable-new-ldflags \
-   --disable-dependency-tracking \
-   --disable-gcc-hidden-visibility \
-   --with-alsa \
+  --includedir=%{_includedir}/kde \
+  --disable-rpath \
+  --disable-debug --disable-warnings \
+  --disable-dependency-tracking \
+  --enable-new-ldflags \
+  --disable-libmad \
 %if %{final}
-   --enable-final \
+  --enable-final
 %endif
-   --includedir=%{_includedir}/kde \
-   --with-qt-libraries=$QTDIR/lib \
-   --disable-debug \
-   --disable-warnings \
-   --disable-rpath
 
 make %{?_smp_mflags}
+
 
 %install
 rm -rf %{buildroot}
@@ -127,6 +115,30 @@ make DESTDIR=%{buildroot} install
       %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig-%{_arch}.h
   install -c -m644 %{SOURCE1}  %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig.h
 %endif
+
+## remove references to optional external libraries in .la files (#178733)
+find $RPM_BUILD_ROOT%{_libdir} -name "*.la" | xargs \
+ sed -i \
+ -e "s|-lmad||g" \
+ -e "s|%{_libdir}/libmad.la||g" \
+ -e "s|-lvorbisfile||g" \
+ -e "s|-lvorbisenc||g" \
+ -e "s|-lvorbis||g" \
+ -e "s|-logg||g" \
+ -e "s|-lasound||g" \
+ -e "s|-laudiofile||g" \
+ -e "s|-lesd||g" \
+ -e "s|%{_libdir}/libesd.la||g" \
+ -e "s|-lgmodule-2.0||g" \
+ -e "s|-lgthread-2.0||g" \
+ -e "s|-lglib-2.0||g" \
+ -e "s|-laudio ||g" \
+ -e "s|-lpng -lz ||g" \
+ -e "s|%{_libdir}/libartsc.la||g" \
+ -e "s@-lboost_filesystem@@g" \
+ -e "s@-lboost_regex@@g" \
+ -e "s@-ljack@@g"
+
 
 %clean
 rm -rf  %{buildroot}
@@ -161,7 +173,13 @@ rm -rf  %{buildroot}
 %{_libdir}/pkgconfig/artsc.pc
 %{_libdir}/lib*.so
 
+
 %changelog
+* Mon May 14 2007 Rex Dieter <rdieter[AT]fedoraproject.org> - 6:1.5.6-3
+- BR: nas-devel jack-audio-connection-kit-devel
+- omit extraneous .la file references (#178733)
+- -devel: Requires: qt-devel pkgconfig
+
 * Mon Feb 26 2007 Than Ngo <than@redhat.com> - 6:1.5.6-2.fc7
 - cleanup specfile
 
