@@ -9,7 +9,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group: System Environment/Daemons
 Epoch: 8
 Version: 1.5.6
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 License: LGPL
 Url: http://www.kde.org
@@ -175,6 +175,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Tue May 15 2007 Rex Dieter <rdieter[AT]fedoraproject.org> - 6:1.5.6-4
+- respin with higher release (for EVR upgrade paths)
+
 * Mon May 14 2007 Rex Dieter <rdieter[AT]fedoraproject.org> - 6:1.5.6-3
 - BR: nas-devel jack-audio-connection-kit-devel
 - omit extraneous .la file references (#178733)
