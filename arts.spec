@@ -23,6 +23,9 @@ Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
+## Consider for inclusion
+# http://vir.homelinux.org/blog/index.php?/archives/41-PowerTOP-and-aRts.html
+Patch9: http://vir.homelinux.org/qtmcop-notifications-on-demand.patch
 
 BuildRequires: qt-devel >= 1:%{qt_version}
 ## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
