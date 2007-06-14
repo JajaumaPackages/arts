@@ -1,15 +1,15 @@
-%define multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64
+%define multilib_arches i386 x86_64 ppc ppc64 s390 s390x sparc sparc64
 
 %define final 1 
-%define qt_version 3.3.7
+%define qt_version 3.3.8
 %define make_cvs 1
 
-Name: arts
+Name:    arts
 Summary: aRts (analog realtime synthesizer) - the KDE sound system 
-Group: System Environment/Daemons
-Epoch: 8
-Version: 1.5.6
-Release: 4%{?dist}
+Group:   System Environment/Daemons
+Epoch:   8
+Version: 1.5.7
+Release: 3%{?dist}
 
 License: LGPL
 Url: http://www.kde.org
@@ -23,11 +23,18 @@ Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.4.0-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
-## Consider for inclusion
-# http://vir.homelinux.org/blog/index.php?/archives/41-PowerTOP-and-aRts.html
-Patch9: http://vir.homelinux.org/qtmcop-notifications-on-demand.patch
 
-BuildRequires: qt-devel >= 1:%{qt_version}
+# upstream patches
+Patch100: arts-1.5.7-qtmcop-notifications-on-demand.patch
+Patch101: arts-1.5.4-dlopenext.patch
+Patch93359: kde-3.5-libtool-shlibext.patch
+# http://bugs.kde.org/139445
+# http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/arts-extension_loader.patch?rev=1.2
+#Patch139445: arts-extension_loader.patch
+Patch139445: arts-1.5.5-kde#139445.patch
+BuildRequires: boost-devel
+
+BuildRequires: qt-devel 
 ## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
 #global qt_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo 3.3)
 #Requires: qt >= 1:%{qt_ver}
@@ -58,14 +65,13 @@ By connecting all those small modules together, you can perform complex
 tasks like simulating a mixer, generating an instrument or things like
 playing a wave file with some effects.
 
-
 %package devel
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: qt-devel
 Requires: pkgconfig
-## those below can/should be omitted from future builds -- Rex
+## those below can/should be omitted from future(f8?) builds -- Rex
 Requires: esound-devel
 Requires: glib2-devel
 Requires: libvorbis-devel
@@ -75,6 +81,7 @@ Requires: alsa-lib-devel
 Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
 
+
 %prep
 %setup -q
 %patch1 -p1 -b .debug
@@ -83,6 +90,13 @@ KDE applications using sound).
 %patch6 -p1 -b .glibc
 %patch7 -p1 -b .check_tmp_dir
 %patch8 -p1 -b .multilib
+
+# upstream patches
+%patch100 -p0 -b .qtmcop-notifications-on-demand
+%patch93359 -p1 -b .libtool-shlibext
+# experimental libtool patches
+%patch101 -p1 -b .dlopenext
+%patch139445 -p1 -b .kde#139445
 
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
@@ -146,9 +160,11 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" | xargs \
 %clean
 rm -rf  %{buildroot}
 
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
+
 
 %files
 %defattr(-,root,root)
@@ -178,6 +194,15 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Jun 14 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-3
+- cleanup gslconfig.h/multilib bits, -ia64, +sparc64/sparc
+
+* Mon Jun 11 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-2
+- (re)add (experimental) libtool patches
+
+* Mon Jun 04 2007 Than Ngo <than@redhat.com> - 6:1.5.7-1.fc7
+- 1.5.7
+
 * Tue May 15 2007 Rex Dieter <rdieter[AT]fedoraproject.org> - 6:1.5.6-4
 - respin with higher release (for EVR upgrade paths)
 

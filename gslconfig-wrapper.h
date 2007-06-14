@@ -3,10 +3,10 @@
  *
  * DO NOT INCLUDE THE NEW FILE DIRECTLY -- ALWAYS INCLUDE THIS ONE INSTEAD. */
 
-#if defined(__i386__)
+#if defined(__x86_64__)
+#include "gslconfig-x86_64.h"
+#elif defined(__i386__)
 #include "gslconfig-i386.h"
-#elif defined(__ia64__)
-#include "gslconfig-ia64.h"
 #elif defined(__powerpc64__)
 #include "gslconfig-ppc64.h"
 #elif defined(__powerpc__)
@@ -15,8 +15,10 @@
 #include "gslconfig-s390x.h"
 #elif defined(__s390__)
 #include "gslconfig-s390.h"
-#elif defined(__x86_64__)
-#include "gslconfig-x86_64.h"
+#elif defined(__sparc64__)
+#include "gslconfig-sparc64.h"
+#elif defined(__sparc__)
+#include "gslconfig-sparc.h"
 #else
 #error "This arts-devel package does not work your architecture?"
 #endif
