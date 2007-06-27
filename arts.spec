@@ -9,7 +9,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 License: LGPL
 Url: http://www.kde.org
@@ -186,6 +186,7 @@ rm -rf  %{buildroot}
 %files devel
 %defattr(-,root,root)
 %{_bindir}/mcopidl
+%dir %{_includedir}/kde
 %{_includedir}/kde/arts
 %{_includedir}/kde/artsc
 %{_bindir}/artsc-config
@@ -194,6 +195,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Jun 27 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-4
+- own %%_includedir/kde (#245909)
+
 * Wed Jun 14 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-3
 - cleanup gslconfig.h/multilib bits, -ia64, +sparc64/sparc
 
