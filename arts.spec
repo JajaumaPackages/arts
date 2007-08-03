@@ -9,7 +9,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -20,7 +20,7 @@ Source1: gslconfig-wrapper.h
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
-Patch6: arts-1.4.0-glibc.patch
+Patch6: arts-1.5.7-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
 
@@ -197,6 +197,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-6
+- update glibc patch ( open -> (open) )
+
 * Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-5
 - omit extention_loader patch (for now anyway), removes boost dep
 - License: LGPLv2+
