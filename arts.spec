@@ -9,9 +9,9 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 
-License: LGPL
+License: LGPLv2+
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
@@ -31,8 +31,8 @@ Patch93359: kde-3.5-libtool-shlibext.patch
 # http://bugs.kde.org/139445
 # http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/arts-extension_loader.patch?rev=1.2
 #Patch139445: arts-extension_loader.patch
-Patch139445: arts-1.5.5-kde#139445.patch
-BuildRequires: boost-devel
+#Patch139445: arts-1.5.5-kde#139445.patch
+#BuildRequires: boost-devel
 
 BuildRequires: qt-devel 
 ## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
@@ -96,7 +96,8 @@ KDE applications using sound).
 %patch93359 -p1 -b .libtool-shlibext
 # experimental libtool patches
 %patch101 -p1 -b .dlopenext
-%patch139445 -p1 -b .kde#139445
+# disable, for now anyway
+#patch139445 -p1 -b .kde#139445
 
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
@@ -167,7 +168,8 @@ rm -rf  %{buildroot}
 
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
+%doc COPYING.LIB
 %dir %{_libdir}/mcop
 %dir %{_libdir}/mcop/Arts
 %{_libdir}/mcop/Arts/*
@@ -184,7 +186,7 @@ rm -rf  %{buildroot}
 %{_bindir}/artswrapper
 
 %files devel
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_bindir}/mcopidl
 %dir %{_includedir}/kde
 %{_includedir}/kde/arts
@@ -195,6 +197,10 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-5
+- omit extention_loader patch (for now anyway), removes boost dep
+- License: LGPLv2+
+
 * Wed Jun 27 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-4
 - own %%_includedir/kde (#245909)
 
