@@ -197,23 +197,23 @@ rm -rf  %{buildroot}
 
 
 %changelog
-* Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-6
+* Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.7-6
 - update glibc patch ( open -> (open) )
 
-* Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-5
+* Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.7-5
 - omit extention_loader patch (for now anyway), removes boost dep
 - License: LGPLv2+
 
-* Wed Jun 27 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-4
+* Wed Jun 27 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.7-4
 - own %%_includedir/kde (#245909)
 
-* Wed Jun 14 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-3
+* Wed Jun 14 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.7-3
 - cleanup gslconfig.h/multilib bits, -ia64, +sparc64/sparc
 
-* Mon Jun 11 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 6:1.5.7-2
+* Mon Jun 11 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.7-2
 - (re)add (experimental) libtool patches
 
-* Mon Jun 04 2007 Than Ngo <than@redhat.com> - 6:1.5.7-1.fc7
+* Mon Jun 04 2007 Than Ngo <than@redhat.com> - 8:1.5.7-1.fc7
 - 1.5.7
 
 * Tue May 15 2007 Rex Dieter <rdieter[AT]fedoraproject.org> - 6:1.5.6-4
