@@ -9,7 +9,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.7
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -23,16 +23,13 @@ Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.5.7-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
-
+# kde#93359
+Patch50: arts-1.5.4-dlopenext.patch
+Patch51: kde-3.5-libtool-shlibext.patch
 # upstream patches
 Patch100: arts-1.5.7-qtmcop-notifications-on-demand.patch
-Patch101: arts-1.5.4-dlopenext.patch
-Patch93359: kde-3.5-libtool-shlibext.patch
-# http://bugs.kde.org/139445
-# http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/arts-extension_loader.patch?rev=1.2
-#Patch139445: arts-extension_loader.patch
-#Patch139445: arts-1.5.5-kde#139445.patch
-#BuildRequires: boost-devel
+
+Requires: which
 
 BuildRequires: qt-devel 
 ## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
@@ -77,6 +74,7 @@ Requires: glib2-devel
 Requires: libvorbis-devel
 Requires: audiofile-devel
 Requires: alsa-lib-devel
+
 %description devel
 Install arts-devel if you intend to write applications using arts (such as
 KDE applications using sound).
@@ -91,13 +89,10 @@ KDE applications using sound).
 %patch7 -p1 -b .check_tmp_dir
 %patch8 -p1 -b .multilib
 
-# upstream patches
+%patch50 -p1 -b .dlopenext
+%patch51 -p1 -b .libtool-shlibext
+
 %patch100 -p0 -b .qtmcop-notifications-on-demand
-%patch93359 -p1 -b .libtool-shlibext
-# experimental libtool patches
-%patch101 -p1 -b .dlopenext
-# disable, for now anyway
-#patch139445 -p1 -b .kde#139445
 
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
@@ -197,6 +192,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Mon Oct 01 2007 Than Ngo <than@redhat.com> - 8:1.5.7-7
+- rh#312621, requires which
+
 * Fri Aug 02 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.7-6
 - update glibc patch ( open -> (open) )
 
