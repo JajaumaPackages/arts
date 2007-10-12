@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -21,7 +21,7 @@ Source1: gslconfig-wrapper.h
 Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
-Patch6: arts-1.5.7-glibc.patch
+Patch6: arts-1.5.8-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
 # kde#93359
@@ -114,7 +114,10 @@ unset QTDIR && . /etc/profile.d/qt.sh
   --enable-final
 %endif
 
-make %{?_smp_mflags}
+# include hack for artsdsp (see http://bugzilla.redhat.com/329671)
+make %{?_smp_mflags} -k || \
+  sed -i -e "s|-Wp,-D_FORTIFY_SOURCE=2||" artsc/Makefile && \
+  make %{?_smp_mflags}
 
 
 %install
@@ -193,6 +196,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Fri Oct 12 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.8-2
+- hack to get artsdsp buildable (#329671)
+
 * Fri Oct 12 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.8-1
 - 1.5.8 (kde-3.5.8)
 
