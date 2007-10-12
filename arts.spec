@@ -1,3 +1,4 @@
+
 %define multilib_arches i386 x86_64 ppc ppc64 s390 s390x sparc sparc64
 
 %define final 1 
@@ -8,8 +9,8 @@ Name:    arts
 Summary: aRts (analog realtime synthesizer) - the KDE sound system 
 Group:   System Environment/Daemons
 Epoch:   8
-Version: 1.5.7
-Release: 7%{?dist}
+Version: 1.5.8
+Release: 1%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -27,13 +28,13 @@ Patch8: arts-1.5.2-multilib.patch
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
 # upstream patches
-Patch100: arts-1.5.7-qtmcop-notifications-on-demand.patch
 
+# used in artsdsp
 Requires: which
 
-BuildRequires: qt-devel 
+BuildRequires: qt-devel
 ## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
-#global qt_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo 3.3)
+#global qt_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo %{qt_version})
 #Requires: qt >= 1:%{qt_ver}
 BuildRequires: alsa-lib-devel
 BuildRequires: glib2-devel
@@ -69,11 +70,13 @@ Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: qt-devel
 Requires: pkgconfig
 ## those below can/should be omitted from future(f8?) builds -- Rex
+%if 0
 Requires: esound-devel
 Requires: glib2-devel
 Requires: libvorbis-devel
 Requires: audiofile-devel
 Requires: alsa-lib-devel
+%endif
 
 %description devel
 Install arts-devel if you intend to write applications using arts (such as
@@ -91,8 +94,6 @@ KDE applications using sound).
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
-
-%patch100 -p0 -b .qtmcop-notifications-on-demand
 
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
@@ -120,13 +121,13 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 
 export PATH=`pwd`:$PATH
-make DESTDIR=%{buildroot} install
+make install DESTDIR=%{buildroot}
 
 %ifarch %{multilib_arches}
 # Ugly hack to allow parallel installation of 32-bit and 64-bit arts-devel
   mv  %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig.h \
       %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig-%{_arch}.h
-  install -c -m644 %{SOURCE1}  %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig.h
+  install -p -m644 %{SOURCE1}  %{buildroot}%{_includedir}/kde/arts/gsl/gslconfig.h
 %endif
 
 ## remove references to optional external libraries in .la files (#178733)
@@ -192,6 +193,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Fri Oct 12 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.8-1
+- 1.5.8 (kde-3.5.8)
+
 * Mon Oct 01 2007 Than Ngo <than@redhat.com> - 8:1.5.7-7
 - rh#312621, requires which
 
