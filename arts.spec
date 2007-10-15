@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -69,10 +69,10 @@ Summary: Development files for the aRts sound server
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: qt-devel
 Requires: pkgconfig
+Requires: glib2-devel
 ## those below can/should be omitted from future(f8?) builds -- Rex
 %if 0
 Requires: esound-devel
-Requires: glib2-devel
 Requires: libvorbis-devel
 Requires: audiofile-devel
 Requires: alsa-lib-devel
@@ -196,6 +196,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Mon Oct 15 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.8-3
+- -devel: +Requires: glib2-deel (#331841)
+
 * Fri Oct 12 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.8-2
 - hack to get artsdsp buildable (#329671)
 
