@@ -175,7 +175,7 @@ rm -rf  %{buildroot}
 %{_libdir}/mcop/*.mcopclass
 %{_libdir}/mcop/*.mcoptype
 %{_libdir}/lib*.so.*
-%{_libdir}/*.la
+%{_libdir}/lib*.la
 %{_bindir}/artscat
 %{_bindir}/artsd
 %{_bindir}/artsdsp
@@ -188,8 +188,8 @@ rm -rf  %{buildroot}
 %defattr(-,root,root,-)
 %{_bindir}/mcopidl
 %dir %{_includedir}/kde
-%{_includedir}/kde/arts
-%{_includedir}/kde/artsc
+%{_includedir}/kde/arts/
+%{_includedir}/kde/artsc/
 %{_bindir}/artsc-config
 %{_libdir}/pkgconfig/artsc.pc
 %{_libdir}/lib*.so
