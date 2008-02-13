@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -24,6 +24,7 @@ Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.5.8-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
+Patch9: arts-1.5.8-gcc43.patch
 # kde#93359
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
@@ -91,6 +92,7 @@ KDE applications using sound).
 %patch6 -p1 -b .glibc
 %patch7 -p1 -b .check_tmp_dir
 %patch8 -p1 -b .multilib
+%patch9 -p1 -b .gcc43
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
@@ -196,6 +198,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Feb 13 2008 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.8-5
+- gcc43 patch 
+
 * Wed Oct 17 2007 Rex Dieter <rdieter[AT]fedoraproject.org> 8:1.5.8-4
 - remove arts/open workaround (#329671)
 
