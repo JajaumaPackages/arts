@@ -1,0 +1,52 @@
+--- branches/arts/1.5/arts/artsc/artsdsp.in	2005/07/26 18:54:59	438982
++++ branches/arts/1.5/arts/artsc/artsdsp.in	2008/04/03 16:18:49	793315
+@@ -89,45 +89,16 @@
+     fi
+ fi
+ 
+-# setup artsdsp preload to hijack calls made to /dev/dsp
+-origargs="$@"
+-binary=`which $1`
+-machine=`uname -m`
+-
+-set `file -L $binary`
+-
+-case $2 in
+-    ELF)
+-       ;;
+-    *)
+-       echo "artsdsp works only for binaries"
+-       exit 1
+-    esac
+-
+-case $3 in
+-    32-bit)
+-       arch_libdir=lib
+-       ;;
+-    64-bit)
+-       arch_libdir=lib64
+-       ;;
+-    *)
+-       exit 1
+-esac
+-
+-set $origargs
+-
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+-libdir=${prefix}/${arch_libdir}
+ 
+ if test "$single_thread" = 1; then
+-  LD_PRELOAD=${libdir}/libartsdsp_st.so.0
++  LD_PRELOAD=${exec_prefix}/\\$LIB/libartsdsp_st.so.0
+ else
+-  LD_PRELOAD=${libdir}/libartsdsp.so.0:${libdir}/libartsc.so.0
++  LD_PRELOAD=${exec_prefix}/\\$LIB/libartsdsp.so.0:${exec_prefix}/\\$LIB/libartsc.so.0
+ fi
+-if test -f ${libdir}/libdl.so.2; then
+-  LD_PRELOAD=$LD_PRELOAD:${libdir}/libdl.so.2
++if test -f ${exec_prefix}/\\$LIB/libdl.so.2; then
++  LD_PRELOAD=$LD_PRELOAD:${exec_prefix}/\\$LIB/libdl.so.2
+ fi
+ export LD_PRELOAD
+ 

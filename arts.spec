@@ -5,12 +5,20 @@
 %define qt_version 3.3.8
 %define make_cvs 1
 
+%if 0%{?fedora} < 10
+%define _with_esd --with-esd
+%define _with_nas --with-nas
+%if 0%{?rhel} == 0
+%define _with_jack --with-jack
+%endif
+%endif
+
 Name:    arts
 Summary: aRts (analog realtime synthesizer) - the KDE sound system 
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -28,6 +36,8 @@ Patch8: arts-1.5.2-multilib.patch
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
 # upstream patches
+# http://websvn.kde.org/branches/arts/1.5/arts/artsc/artsdsp.in?r1=438982&r2=793315&pathrev=793315
+Patch100: arts-1.5.9-rh#444484.patch
 
 # used in artsdsp
 Requires: which
@@ -40,11 +50,9 @@ BuildRequires: alsa-lib-devel
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
 BuildRequires: audiofile-devel
-BuildRequires: esound-devel
-%if 0%{?fedora} > 4
-BuildRequires: jack-audio-connection-kit-devel
-%endif
-BuildRequires: nas-devel
+%{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
+%{?_with_esd:BuildRequires: esound-devel}
+%{?_with_nas:BuildRequires: nas-devel}
 BuildRequires: findutils sed
 %if %{make_cvs}
 BuildRequires: automake libtool
@@ -71,8 +79,7 @@ Requires: qt3-devel
 Requires: pkgconfig
 Requires: glib2-devel
 %description devel
-Install arts-devel if you intend to write applications using arts (such as
-KDE applications using sound).
+Install %{name}-devel if you intend to write applications using aRts.
 
 
 %prep
@@ -86,6 +93,7 @@ KDE applications using sound).
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
+%patch100 -p4 -b .rh#444484
 
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
@@ -102,7 +110,11 @@ unset QTDIR && . /etc/profile.d/qt.sh
   --disable-dependency-tracking \
   --enable-new-ldflags \
   --disable-libmad \
-%if %{final}
+  --with-alsa \
+  %{?_with_esd} %{!?_with_esd:--without-esd} \
+  %{?_with_jack} %{!?_with_jack:--without-jack}\
+  %{?_with_nas} %{!?_with_nas:--without-nas} \
+%if 0%{?final}
   --enable-final
 %endif
 
@@ -188,6 +200,10 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Thu May 15 2008 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.9-3
+- arts support for mixed multilib usage (#444484)
+- f10+: drop optional esd, jack, nas support
+
 * Wed Mar 12 2008 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.9-2
 - s/qt-devel/qt3-devel/
 
