@@ -1,8 +1,9 @@
 
+%define _default_patch_fuzz 2
+
 %define multilib_arches i386 x86_64 ppc ppc64 s390 s390x sparc sparc64
 
 %define final 1 
-%define qt_version 3.3.8
 %define make_cvs 1
 
 %if 0%{?fedora} < 10
@@ -13,12 +14,20 @@
 %endif
 %endif
 
+%if 0%{?fedora} > 8
+%define qt3 qt3
+%else
+%define qt3 qt
+%define qt3_epoch 1:
+%endif
+%define qt3_ev %{?qt3_epoch}3.3.8
+
 Name:    arts
 Summary: aRts (analog realtime synthesizer) - the KDE sound system 
 Group:   System Environment/Daemons
 Epoch:   8
-Version: 1.5.9
-Release: 3%{?dist}
+Version: 1.5.10
+Release: 1%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -36,16 +45,15 @@ Patch8: arts-1.5.2-multilib.patch
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
 # upstream patches
-# http://websvn.kde.org/branches/arts/1.5/arts/artsc/artsdsp.in?r1=438982&r2=793315&pathrev=793315
-Patch100: arts-1.5.9-rh#444484.patch
+
 
 # used in artsdsp
 Requires: which
 
-BuildRequires: qt3-devel
+BuildRequires: %{qt3}-devel >= %{qt3_ev}
 ## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
-#global qt3_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo %{qt_version})
-#Requires: qt3 >= 1:%{qt3_ver}
+#global qt3_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo %{qt3_ev})
+#Requires: %{qt3} >= %{qt3_ver}
 BuildRequires: alsa-lib-devel
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
@@ -93,7 +101,6 @@ Install %{name}-devel if you intend to write applications using aRts.
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
-%patch100 -p4 -b .rh#444484
 
 %if %{make_cvs}
   make -f admin/Makefile.common cvs
@@ -200,6 +207,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Tue Aug 26 2008 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.10-1
+- arts-1.5.10
+
 * Thu May 15 2008 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.9-3
 - arts support for mixed multilib usage (#444484)
 - f10+: drop optional esd, jack, nas support
