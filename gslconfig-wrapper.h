@@ -15,7 +15,7 @@
 #include "gslconfig-s390x.h"
 #elif defined(__s390__)
 #include "gslconfig-s390.h"
-#elif defined(__sparc64__)
+#elif defined(__sparc__) && defined (__arch64__)
 #include "gslconfig-sparc64.h"
 #elif defined(__sparc__)
 #include "gslconfig-sparc.h"
