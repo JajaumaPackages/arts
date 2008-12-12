@@ -27,7 +27,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -55,16 +55,17 @@ BuildRequires: %{qt3}-devel >= %{qt3_ev}
 #global qt3_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo %{qt3_ev})
 #Requires: %{qt3} >= %{qt3_ver}
 BuildRequires: alsa-lib-devel
-BuildRequires: glib2-devel
-BuildRequires: libvorbis-devel
 BuildRequires: audiofile-devel
-%{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
-%{?_with_esd:BuildRequires: esound-devel}
-%{?_with_nas:BuildRequires: nas-devel}
-BuildRequires: findutils sed
 %if %{make_cvs}
 BuildRequires: automake libtool
 %endif
+%{?_with_esd:BuildRequires: esound-devel}
+BuildRequires: findutils sed
+BuildRequires: glib2-devel
+%{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
+BuildRequires: libvorbis-devel
+%{?_with_nas:BuildRequires: nas-devel}
+BuildRequires: pkgconfig
 
 
 %description
@@ -207,6 +208,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Fri Dec 12 2008 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.10-3
+- rebuild for pkgconfig deps
+
 * Mon Sep 29 2008 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.10-2
 - multilib (sparc) fixes
 
