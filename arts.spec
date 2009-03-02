@@ -1,7 +1,7 @@
 
 %define _default_patch_fuzz 2
 
-%define multilib_arches i386 x86_64 ppc ppc64 s390 s390x sparcv9 sparc64
+%define multilib_arches %{ix86} x86_64 ppc ppc64 s390 s390x sparcv9 sparc64
 
 %define final 1 
 %define make_cvs 1
@@ -27,7 +27,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -208,6 +208,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Mon Mar 02 2009 Rex Dieter <rdieter@fedoraproject.org> - 8:1.5.10-5
+- s/i386/%%ix86/
+
 * Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
