@@ -27,7 +27,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -83,7 +83,7 @@ playing a wave file with some effects.
 %package devel
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
-Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires: %{qt3}-devel
 Requires: pkgconfig
 Requires: glib2-devel
@@ -104,6 +104,8 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch51 -p1 -b .libtool-shlibext
 
 %if %{make_cvs}
+# hack/fix for newer automake
+  sed -iautomake -e 's|automake\*1.10\*|automake\*1.1[0-5]\*|' admin/cvs.sh
   make -f admin/Makefile.common cvs
 %endif
 
@@ -208,6 +210,10 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Sat Jul 18 2009 Rex Dieter <rdieter@fedoraproject.org> - 8:1.5.10-6
+- FTBFS arts-1.5.10-5.fc11 (#511653)
+- -devel: Requires: %%{name}%%_isa ...
+
 * Mon Mar 02 2009 Rex Dieter <rdieter@fedoraproject.org> - 8:1.5.10-5
 - s/i386/%%ix86/
 
