@@ -6,20 +6,7 @@
 %define final 1 
 %define make_cvs 1
 
-%if 0%{?fedora} < 10
-%define _with_esd --with-esd
-%define _with_nas --with-nas
-%if 0%{?rhel} == 0
-%define _with_jack --with-jack
-%endif
-%endif
-
-%if 0%{?fedora} > 8
 %define qt3 qt3
-%else
-%define qt3 qt
-%define qt3_epoch 1:
-%endif
 %define qt3_ev %{?qt3_epoch}3.3.8
 
 Name:    arts
@@ -27,7 +14,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 7%{?dist}
+Release: 8%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -51,20 +38,14 @@ Patch51: kde-3.5-libtool-shlibext.patch
 Requires: which
 
 BuildRequires: %{qt3}-devel >= %{qt3_ev}
-## Shouldn't be necessary, but some folks won't upgrade, unless we stiff-arm them.  (-;
-#global qt3_ver %(pkg-config qt-mt --modversion 2>/dev/null || echo %{qt3_ev})
-#Requires: %{qt3} >= %{qt3_ver}
 BuildRequires: alsa-lib-devel
 BuildRequires: audiofile-devel
 %if %{make_cvs}
 BuildRequires: automake libtool
 %endif
-%{?_with_esd:BuildRequires: esound-devel}
 BuildRequires: findutils sed
 BuildRequires: glib2-devel
-%{?_with_jack:BuildRequires: jack-audio-connection-kit-devel}
 BuildRequires: libvorbis-devel
-%{?_with_nas:BuildRequires: nas-devel}
 BuildRequires: pkgconfig
 
 
@@ -121,9 +102,6 @@ unset QTDIR && . /etc/profile.d/qt.sh
   --enable-new-ldflags \
   --disable-libmad \
   --with-alsa \
-  %{?_with_esd} %{!?_with_esd:--without-esd} \
-  %{?_with_jack} %{!?_with_jack:--without-jack}\
-  %{?_with_nas} %{!?_with_nas:--without-nas} \
 %if 0%{?final}
   --enable-final
 %endif
@@ -210,6 +188,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Sep 02 2009 Than Ngo <than@redhat.com> - 1.5.10-8
+- drop support fedora < 10
+
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
