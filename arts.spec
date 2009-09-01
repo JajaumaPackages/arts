@@ -6,9 +6,6 @@
 %define final 1 
 %define make_cvs 1
 
-%define qt3 qt3
-%define qt3_ev %{?qt3_epoch}3.3.8
-
 Name:    arts
 Summary: aRts (analog realtime synthesizer) - the KDE sound system 
 Group:   System Environment/Daemons
@@ -37,7 +34,7 @@ Patch51: kde-3.5-libtool-shlibext.patch
 # used in artsdsp
 Requires: which
 
-BuildRequires: %{qt3}-devel >= %{qt3_ev}
+BuildRequires: qt3-devel >= 3.3.8
 BuildRequires: alsa-lib-devel
 BuildRequires: audiofile-devel
 %if %{make_cvs}
@@ -65,7 +62,7 @@ playing a wave file with some effects.
 Group: Development/Libraries
 Summary: Development files for the aRts sound server
 Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
-Requires: %{qt3}-devel
+Requires: qt3-devel
 Requires: pkgconfig
 Requires: glib2-devel
 %description devel
