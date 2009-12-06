@@ -11,12 +11,12 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source0: ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Source0: ftp://ftp.kde.org/pub/kde/stable/3.5.10/src/%{name}-%{version}.tar.bz2
 Source1: gslconfig-wrapper.h
 
 Patch1: arts-1.1.4-debug.patch
@@ -185,6 +185,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Sun Dec 06 2009 Than Ngo <than@redhat.com> - 1.5.10-9
+- fix url
+
 * Wed Sep 02 2009 Than Ngo <than@redhat.com> - 1.5.10-8
 - drop support fedora < 10
 
