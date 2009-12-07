@@ -3,7 +3,6 @@
 
 %define multilib_arches %{ix86} x86_64 ppc ppc64 s390 s390x sparcv9 sparc64
 
-%define final 1 
 %define make_cvs 1
 
 Name:    arts
@@ -30,6 +29,9 @@ Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
 # upstream patches
 
+# security patches
+# CVE-2009-3736 libtool: libltdl may load and execute code from a library in the current directory 
+Patch200: libltdl-CVE-2009-3736.patch
 
 # used in artsdsp
 Requires: which
@@ -81,6 +83,8 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
 
+%patch200 -p1 -b .CVE-2009-3736
+
 %if %{make_cvs}
 # hack/fix for newer automake
   sed -iautomake -e 's|automake\*1.10\*|automake\*1.1[0-5]\*|' admin/cvs.sh
@@ -99,9 +103,7 @@ unset QTDIR && . /etc/profile.d/qt.sh
   --enable-new-ldflags \
   --disable-libmad \
   --with-alsa \
-%if 0%{?final}
   --enable-final
-%endif
 
 ## hack for artsdsp (see http://bugzilla.redhat.com/329671)
 #make %{?_smp_mflags} -k || \
@@ -187,6 +189,7 @@ rm -rf  %{buildroot}
 %changelog
 * Sun Dec 06 2009 Than Ngo <than@redhat.com> - 1.5.10-9
 - fix url
+- fix security issues in libltdl (CVE-2009-3736)
 
 * Wed Sep 02 2009 Than Ngo <than@redhat.com> - 1.5.10-8
 - drop support fedora < 10
