@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 9%{?dist}
+Release: 10%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -32,6 +32,9 @@ Patch51: kde-3.5-libtool-shlibext.patch
 # security patches
 # CVE-2009-3736 libtool: libltdl may load and execute code from a library in the current directory 
 Patch200: libltdl-CVE-2009-3736.patch
+
+# tweak autoconfigury so that it builds with autoconf 2.64 or 2.65
+Patch300: arts-acinclude.patch
 
 # used in artsdsp
 Requires: which
@@ -85,6 +88,10 @@ Install %{name}-devel if you intend to write applications using aRts.
 
 %patch200 -p1 -b .CVE-2009-3736
 
+%patch300 -p1 -b .acinclude
+
+%build
+
 %if %{make_cvs}
 # hack/fix for newer automake
   sed -iautomake -e 's|automake\*1.10\*|automake\*1.1[0-5]\*|' admin/cvs.sh
@@ -92,7 +99,6 @@ Install %{name}-devel if you intend to write applications using aRts.
 %endif
 
 
-%build
 unset QTDIR && . /etc/profile.d/qt.sh
 
 %configure \
@@ -187,6 +193,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Thu Dec 10 2009 Stepan Kasal <skasal@redhat.com> - 1.5.10-10
+- patch autoconfigury to build with autoconf >= 2.64
+
 * Sun Dec 06 2009 Than Ngo <than@redhat.com> - 1.5.10-9
 - fix url
 - fix security issues in libltdl (CVE-2009-3736)
