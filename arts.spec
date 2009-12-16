@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 10%{?dist}
+Release: 11%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -24,6 +24,8 @@ Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.5.8-glibc.patch
 Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
+# don't pop up a dialog on CPU overload (#361891)
+Patch9: arts-1.5.10-cpu-overload-quiet.patch
 # kde#93359
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
@@ -82,6 +84,7 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch6 -p1 -b .glibc
 %patch7 -p1 -b .check_tmp_dir
 %patch8 -p1 -b .multilib
+%patch9 -p1 -b .cpu-overload-quiet
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
@@ -193,6 +196,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Dec 16 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.5.10-11
+- don't pop up a dialog on CPU overload (#361891)
+
 * Thu Dec 10 2009 Stepan Kasal <skasal@redhat.com> - 1.5.10-10
 - patch autoconfigury to build with autoconf >= 2.64
 
