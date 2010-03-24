@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 11%{?dist}
+Release: 12%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -26,6 +26,8 @@ Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
 # don't pop up a dialog on CPU overload (#361891)
 Patch9: arts-1.5.10-cpu-overload-quiet.patch
+# don't call snd_pcm_close(NULL), triggers assertion failure in ALSA (#558570)
+Patch10: arts-1.5.10-assertion-failure.patch
 # kde#93359
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
@@ -85,6 +87,7 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch7 -p1 -b .check_tmp_dir
 %patch8 -p1 -b .multilib
 %patch9 -p1 -b .cpu-overload-quiet
+%patch10 -p1 -b .assertion-failure
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
@@ -196,17 +199,20 @@ rm -rf  %{buildroot}
 
 
 %changelog
-* Wed Dec 16 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.5.10-11
+* Wed Mar 24 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-12
+- don't call snd_pcm_close(NULL), triggers assertion failure in ALSA (#558570)
+
+* Wed Dec 16 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-11
 - don't pop up a dialog on CPU overload (#361891)
 
-* Thu Dec 10 2009 Stepan Kasal <skasal@redhat.com> - 1.5.10-10
+* Thu Dec 10 2009 Stepan Kasal <skasal@redhat.com> - 8:1.5.10-10
 - patch autoconfigury to build with autoconf >= 2.64
 
-* Sun Dec 06 2009 Than Ngo <than@redhat.com> - 1.5.10-9
+* Sun Dec 06 2009 Than Ngo <than@redhat.com> - 8:1.5.10-9
 - fix url
 - fix security issues in libltdl (CVE-2009-3736)
 
-* Wed Sep 02 2009 Than Ngo <than@redhat.com> - 1.5.10-8
+* Wed Sep 02 2009 Than Ngo <than@redhat.com> - 8:1.5.10-8
 - drop support fedora < 10
 
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-7
