@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 12%{?dist}
+Release: 13%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -199,6 +199,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Mar 24 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-12
 - don't call snd_pcm_close(NULL), triggers assertion failure in ALSA (#558570)
 
