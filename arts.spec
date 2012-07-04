@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 15%{?dist}
+Release: 16%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -39,6 +39,8 @@ Patch200: libltdl-CVE-2009-3736.patch
 
 # tweak autoconfigury so that it builds with autoconf 2.64 or 2.65
 Patch300: arts-acinclude.patch
+# update for recent automake
+Patch301: arts-1.5.10-automake.patch
 
 # used in artsdsp
 Requires: which
@@ -95,12 +97,11 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch200 -p1 -b .CVE-2009-3736
 
 %patch300 -p1 -b .acinclude
+%patch301 -p1 -b .automake
 
 %build
 
 %if %{make_cvs}
-# hack/fix for newer automake
-  sed -iautomake -e 's|automake\*1.10\*|automake\*1.1[0-5]\*|' admin/cvs.sh
   make -f admin/Makefile.common cvs
 %endif
 
@@ -199,6 +200,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Jul 04 2012 Dan Horák <dan[at]danny.cz> - 8:1.5.10-16
+- fix build with automake 1.11.5
+
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-15
 - Rebuilt for c++ ABI breakage
 
