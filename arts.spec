@@ -10,7 +10,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 19%{?dist}
+Release: 20%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -31,6 +31,10 @@ Patch10: arts-1.5.10-assertion-failure.patch
 # kde#93359
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
+# fix build failture with automake-1.13
+patch52: arts-1.5.10-automake-1.13.patch
+
+
 # upstream patches
 
 # security patches
@@ -93,6 +97,7 @@ Install %{name}-devel if you intend to write applications using aRts.
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
+%patch52 -p1 -b .automake-1.13
 
 %patch200 -p1 -b .CVE-2009-3736
 
@@ -200,6 +205,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Thu Mar 07 2013 Than Ngo <than@redhat.com> - 1.5.10-20
+- fix FTBFS in rawhide
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

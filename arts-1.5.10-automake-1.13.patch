@@ -1,0 +1,12 @@
+diff -up arts-1.5.10/admin/cvs.sh.me arts-1.5.10/admin/cvs.sh
+--- arts-1.5.10/admin/cvs.sh.me	2013-03-07 18:08:31.003844848 +0100
++++ arts-1.5.10/admin/cvs.sh	2013-03-07 18:09:07.187488301 +0100
+@@ -130,7 +130,7 @@ if egrep "^AM_CONFIG_HEADER" configure.i
+ fi
+ 
+ echo "*** Creating Makefile templates"
+-$AUTOMAKE || exit 1
++$AUTOMAKE --add-missing || exit 1
+ 
+ if test "$UNSERMAKE" = no; then
+   echo "*** Postprocessing Makefile templates"
