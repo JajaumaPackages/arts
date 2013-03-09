@@ -42,7 +42,7 @@ Patch300: kde3-acinclude.patch
 # remove flawed and obsolete automake version check in admin/cvs.sh
 Patch301: kde3-automake-version.patch
 # fix build failure with automake 1.13: add the --add-missing flag
-Patch302: arts-1.5.10-automake-1.13.patch
+Patch302: kde3-automake-add-missing.patch
 
 # used in artsdsp
 Requires: which
