@@ -3,14 +3,12 @@
 
 %define multilib_arches %{ix86} x86_64 ppc ppc64 s390 s390x sparcv9 sparc64
 
-%define make_cvs 1
-
 Name:    arts
 Summary: aRts (analog realtime synthesizer) - the KDE sound system 
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 20%{?dist}
+Release: 21%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -31,9 +29,6 @@ Patch10: arts-1.5.10-assertion-failure.patch
 # kde#93359
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
-# fix build failture with automake-1.13
-patch52: arts-1.5.10-automake-1.13.patch
-
 
 # upstream patches
 
@@ -41,10 +36,13 @@ patch52: arts-1.5.10-automake-1.13.patch
 # CVE-2009-3736 libtool: libltdl may load and execute code from a library in the current directory 
 Patch200: libltdl-CVE-2009-3736.patch
 
+# fixes to common KDE 3 autotools machinery
 # tweak autoconfigury so that it builds with autoconf 2.64 or 2.65
-Patch300: arts-acinclude.patch
-# update for recent automake
-Patch301: arts-1.5.10-automake.patch
+Patch300: kde3-acinclude.patch
+# remove flawed and obsolete automake version check in admin/cvs.sh
+Patch301: kde3-automake-version.patch
+# fix build failure with automake 1.13: add the --add-missing flag
+Patch302: arts-1.5.10-automake-1.13.patch
 
 # used in artsdsp
 Requires: which
@@ -52,9 +50,7 @@ Requires: which
 BuildRequires: qt3-devel >= 3.3.8
 BuildRequires: alsa-lib-devel
 BuildRequires: audiofile-devel
-%if %{make_cvs}
 BuildRequires: automake libtool
-%endif
 BuildRequires: findutils sed
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
@@ -102,14 +98,11 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch200 -p1 -b .CVE-2009-3736
 
 %patch300 -p1 -b .acinclude
-%patch301 -p1 -b .automake
+%patch301 -p1 -b .automake-version
+%patch302 -p1 -b .automake-add-missing
 
 %build
-
-%if %{make_cvs}
-  make -f admin/Makefile.common cvs
-%endif
-
+make -f admin/Makefile.common cvs
 
 unset QTDIR && . /etc/profile.d/qt.sh
 
@@ -205,6 +198,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Sat Mar 09 2013 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.5.10-21
+- unify KDE 3 autotools fixes between packages
+
 * Thu Mar 07 2013 Than Ngo <than@redhat.com> - 1.5.10-20
 - fix FTBFS in rawhide
 
