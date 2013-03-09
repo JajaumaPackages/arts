@@ -93,7 +93,6 @@ Install %{name}-devel if you intend to write applications using aRts.
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
-%patch52 -p1 -b .automake-1.13
 
 %patch200 -p1 -b .CVE-2009-3736
 
