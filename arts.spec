@@ -100,10 +100,9 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch300 -p1 -b .acinclude
 %patch301 -p1 -b .automake-version
 %patch302 -p1 -b .automake-add-missing
-
-%build
 make -f admin/Makefile.common cvs
 
+%build
 unset QTDIR && . /etc/profile.d/qt.sh
 
 %configure \
