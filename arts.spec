@@ -8,7 +8,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 21%{?dist}
+Release: 22%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -41,7 +41,8 @@ Patch200: libltdl-CVE-2009-3736.patch
 Patch300: kde3-acinclude.patch
 # remove flawed and obsolete automake version check in admin/cvs.sh
 Patch301: kde3-automake-version.patch
-# fix build failure with automake 1.13: add the --add-missing flag
+# fix build failure with automake 1.13: add the --add-missing --copy flags
+# also add --force-missing to get aarch64 support (#925029/#925627)
 Patch302: kde3-automake-add-missing.patch
 
 # used in artsdsp
@@ -196,6 +197,10 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Tue Mar 26 2013 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.5.10-22
+- use automake --force-missing to get aarch64 support (#925029/#925627)
+- also use automake --copy (the default is symlinking)
+
 * Sat Mar 09 2013 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.5.10-21
 - unify KDE 3 autotools fixes between packages
 
