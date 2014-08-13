@@ -56,6 +56,7 @@ BuildRequires: findutils sed
 BuildRequires: glib2-devel
 BuildRequires: libvorbis-devel
 BuildRequires: pkgconfig
+BuildRequires: chrpath
 
 
 %description
