@@ -8,7 +8,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 24%{?dist}
+Release: 25%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -115,6 +115,10 @@ unset QTDIR && . /etc/profile.d/qt.sh
   --with-alsa \
   --enable-final
 
+# kill rpath harder, https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines#Removing_Rpath 
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 ## hack for artsdsp (see http://bugzilla.redhat.com/329671)
 #make %{?_smp_mflags} -k || \
 #  sed -i -e "s|-Wp,-D_FORTIFY_SOURCE=2||" artsc/Makefile && \
@@ -158,6 +162,11 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" | xargs \
  -e "s@-ljack@@g"
 
 
+%check
+## Verify rpath, or lack thereof
+test -z "$(chrpath --list %{buildroot}%{_bindir}/artsd 2>/dev/null | grep RPATH=)"
+
+
 %clean
 rm -rf  %{buildroot}
 
@@ -197,6 +206,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Aug 13 2014 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.10-25
+- kill rpaths harder
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-24
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
