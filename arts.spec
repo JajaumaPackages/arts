@@ -116,9 +116,9 @@ unset QTDIR && . /etc/profile.d/qt.sh
   --with-alsa \
   --enable-final
 
-# kill rpath harder, https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines#Removing_Rpath 
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+# kill rpath harder, inspired by https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines#Removing_Rpath
+# other more standard variants didnt work or caused other problems
+sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' libtool
 
 ## hack for artsdsp (see http://bugzilla.redhat.com/329671)
 #make %{?_smp_mflags} -k || \
