@@ -8,7 +8,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 26%{?dist}
+Release: 27%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -207,6 +207,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Fri Apr 03 2015 Rex Dieter <rdieter@fedoraproject.org> 8:1.5.10-27
+- rebuild (gcc5)
+
 * Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-26
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
