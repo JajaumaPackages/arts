@@ -8,7 +8,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 29%{?dist}
+Release: 30%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -20,7 +20,6 @@ Patch1: arts-1.1.4-debug.patch
 Patch2: arts-1.3.92-glib2.patch
 Patch5: arts-1.3.1-alsa.patch
 Patch6: arts-1.5.8-glibc.patch
-Patch7: arts-1.5.0-check_tmp_dir.patch
 Patch8: arts-1.5.2-multilib.patch
 # don't pop up a dialog on CPU overload (#361891)
 Patch9: arts-1.5.10-cpu-overload-quiet.patch
@@ -35,6 +34,11 @@ Patch51: kde-3.5-libtool-shlibext.patch
 # security patches
 # CVE-2009-3736 libtool: libltdl may load and execute code from a library in the current directory 
 Patch200: libltdl-CVE-2009-3736.patch
+# CVE-2015-7543 arts,kdelibs3: Use of mktemp(3) allows attacker to hijack the IPC
+# backport upstream fix (the lnusertemp.c change) from kdelibs 4:
+# http://commits.kde.org/kdelibs/cc5515ed7ce8884c9b18169158ba29ab2f7a3db7
+# upstream fix by Joseph Wenninger, rediffed for aRts by Kevin Kofler
+Patch201: arts-1.5.10-CVE-2015-7543.patch
 
 # fixes to common KDE 3 autotools machinery
 # tweak autoconfigury so that it builds with autoconf 2.64 or 2.65
@@ -88,7 +92,6 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch2 -p1 -b .glib
 %patch5 -p1 -b .alsa
 %patch6 -p1 -b .glibc
-%patch7 -p1 -b .check_tmp_dir
 %patch8 -p1 -b .multilib
 %patch9 -p1 -b .cpu-overload-quiet
 %patch10 -p1 -b .assertion-failure
@@ -97,6 +100,7 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch51 -p1 -b .libtool-shlibext
 
 %patch200 -p1 -b .CVE-2009-3736
+%patch201 -p1 -b .CVE-2015-7543
 
 %patch300 -p1 -b .acinclude
 %patch301 -p1 -b .automake-version
@@ -207,6 +211,11 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Thu Dec 10 2015 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-30
+- Backport CVE-2015-7543 fix (Joseph Wenninger) from kdelibs 4 (#1289237)
+- Drop arts-1.5.0-check_tmp_dir.patch, #169631 fixed differently upstream, and
+  the patch interferes with the security fix for CVE-2015-7543
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8:1.5.10-29
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
