@@ -8,7 +8,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 30%{?dist}
+Release: 31%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -211,6 +211,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 8:1.5.10-31
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Thu Dec 10 2015 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-30
 - Backport CVE-2015-7543 fix (Joseph Wenninger) from kdelibs 4 (#1289237)
 - Drop arts-1.5.0-check_tmp_dir.patch, #169631 fixed differently upstream, and
