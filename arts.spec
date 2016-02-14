@@ -110,7 +110,7 @@ make -f admin/Makefile.common cvs
 %build
 unset QTDIR && . /etc/profile.d/qt.sh
 
-export CXXFLAGS="%{optflags} -Wno-error-narrowing"
+export CXXFLAGS="%{optflags} -Wno-error=narrowing"
 
 %configure \
   --includedir=%{_includedir}/kde \
@@ -214,7 +214,7 @@ rm -rf  %{buildroot}
 
 %changelog
 * Sun Feb 14 2016 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-32
-- Add -Wno-error-narrowing to the CXXFLAGS to fix FTBFS (#1307330)
+- Add -Wno-error=narrowing to the CXXFLAGS to fix FTBFS (#1307330)
 
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 8:1.5.10-31
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
