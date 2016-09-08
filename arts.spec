@@ -8,7 +8,7 @@ Summary: aRts (analog realtime synthesizer) - the KDE sound system
 Group:   System Environment/Daemons
 Epoch:   8
 Version: 1.5.10
-Release: 32%{?dist}
+Release: 33%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -25,6 +25,8 @@ Patch8: arts-1.5.2-multilib.patch
 Patch9: arts-1.5.10-cpu-overload-quiet.patch
 # don't call snd_pcm_close(NULL), triggers assertion failure in ALSA (#558570)
 Patch10: arts-1.5.10-assertion-failure.patch
+# fix detection of ALSA 1.1 (and future 1.x) in configure.in.in
+Patch11: arts-1.5.10-alsa11.patch
 # kde#93359
 Patch50: arts-1.5.4-dlopenext.patch
 Patch51: kde-3.5-libtool-shlibext.patch
@@ -95,6 +97,7 @@ Install %{name}-devel if you intend to write applications using aRts.
 %patch8 -p1 -b .multilib
 %patch9 -p1 -b .cpu-overload-quiet
 %patch10 -p1 -b .assertion-failure
+%patch11 -p1 -b .alsa11
 
 %patch50 -p1 -b .dlopenext
 %patch51 -p1 -b .libtool-shlibext
@@ -213,6 +216,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Thu Sep 08 2016 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-33
+- Fix detection of ALSA 1.1 (and future 1.x) in configure.in.in
+
 * Sun Feb 14 2016 Kevin Kofler <Kevin@tigcc.ticalc.org> - 8:1.5.10-32
 - Add -Wno-error=narrowing to the CXXFLAGS to fix FTBFS (#1307330)
 

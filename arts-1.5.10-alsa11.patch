@@ -1,0 +1,12 @@
+diff -ur arts-1.5.10/configure.in.in arts-1.5.10-alsa11/configure.in.in
+--- arts-1.5.10/configure.in.in	2008-08-19 21:50:50.000000000 +0200
++++ arts-1.5.10-alsa11/configure.in.in	2016-09-09 00:09:43.395980844 +0200
+@@ -635,7 +635,7 @@
+       #include <alsa/asoundlib.h>
+       #endif
+     ],[
+-      #if (SND_LIB_MAJOR == 1) && (SND_LIB_MINOR == 0)
++      #if (SND_LIB_MAJOR == 1)
+         /* we have ALSA 1.x */
+       #else
+         #error not ALSA 1.x
